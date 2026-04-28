@@ -5,50 +5,134 @@ date: 2026-04-28
 
 # Datawizard Skills
 
-Monorepo with thematic plugins for Claude Code, Cursor, and other AI coding tools that support the `SKILL.md` format.
+Monorepo s tematickými pluginy pro **Claude Code**, **Cursor** a další AI nástroje podporující formát `SKILL.md`.
 
-## Plugins
+Repo: [github.com/Karyzard/datawizard-skills](https://github.com/Karyzard/datawizard-skills)
 
-| Plugin | Purpose |
+## Pluginy
+
+| Plugin | Účel |
 |---|---|
-| [datawizard-core](plugins/datawizard-core/) | Markdown vault session workflow (start, wrap, ship) + global rules |
-| [content-tools](plugins/content-tools/) | Document conversion (email, PDF, transcripts) and image generation |
-| [client-delivery](plugins/client-delivery/) | Client work — discovery, advisory personas |
-| [product-design](plugins/product-design/) | Design Thinking pipeline, prototyping, UI/UX |
-| [business-advice](plugins/business-advice/) | Consultant personas (Hormozi, Inizio) |
-| [talent-coaching](plugins/talent-coaching/) | Kasimaka talent coaching personas |
-| [wiki-tools](plugins/wiki-tools/) | Markdown wiki ingest, lint, query |
+| [datawizard-core](plugins/datawizard-core/) | Session workflow (`start`, `wrap`, `ship`) + globální pravidla |
+| [content-tools](plugins/content-tools/) | Konverze dokumentů (email, PDF, přepisy schůzek) a generování obrázků |
+| [client-delivery](plugins/client-delivery/) | Klientská práce — discovery, advisory persony |
+| [product-design](plugins/product-design/) | Design Thinking pipeline, prototyping, UI/UX intelligence |
+| [business-advice](plugins/business-advice/) | Konzultantské persony (Hormozi, Inizio) |
+| [talent-coaching](plugins/talent-coaching/) | Kasimaka talent koučovací persony |
+| [wiki-tools](plugins/wiki-tools/) | Markdown wiki — ingest, lint, query |
 
-## Installation
+## Instalace pro Claude Code
 
-### Claude Code
+### 1. Přidej marketplace (jednorázově)
 
-```bash
-/plugin install file:///Users/karelsimek/Documents/_app-projects/datawizard-skills/plugins/<plugin-name>
+```
+/plugin marketplace add Karyzard/datawizard-skills
 ```
 
-Or from GitHub once published:
+> ⚠️ **Důležité:** repo musí být veřejné. Claude Code zatím nepodporuje autentizaci k privátním repos pro marketplace.
 
-```bash
-/plugin marketplace add karyzard/datawizard-skills
-/plugin install <plugin-name>@datawizard-skills
+Po úspěchu uvidíš: `Successfully added marketplace: datawizard-skills`
+
+### 2. Nainstaluj jednotlivé pluginy
+
+```
+/plugin install datawizard-core@datawizard-skills
+/plugin install content-tools@datawizard-skills
+/plugin install client-delivery@datawizard-skills
+/plugin install product-design@datawizard-skills
+/plugin install business-advice@datawizard-skills
+/plugin install talent-coaching@datawizard-skills
+/plugin install wiki-tools@datawizard-skills
 ```
 
-### Cursor
+Nainstaluj jen ty, které potřebuješ.
 
-Symlink the skills directory:
+### 3. Použití
 
-```bash
-ln -s /Users/karelsimek/Documents/_app-projects/datawizard-skills/plugins/<plugin-name>/skills ~/.cursor/skills/<plugin-name>
+Skills se pak buď **automaticky aktivují** podle popisu v dané situaci, nebo je můžeš zavolat jako slash command:
+
+```
+/start         # zahájí pracovní úsek
+/wrap          # uzavře úsek a zapíše log
+/ship          # commit + push
 ```
 
-## Conventions
+Skill list zobrazíš příkazem `/plugin`.
 
-- Each plugin lives in `plugins/<name>/`
+### Aktualizace
+
+Když na repu vyjde nová verze:
+
+```
+/plugin marketplace update datawizard-skills
+/plugin update <plugin-name>@datawizard-skills
+```
+
+### Odinstalace
+
+```
+/plugin uninstall <plugin-name>@datawizard-skills
+/plugin marketplace remove datawizard-skills
+```
+
+## Instalace pro Cursor
+
+Cursor zatím plugin systém nemá — používá `~/.cursor/skills/` jako složku. Skills sdílíš symlinkem:
+
+```bash
+# Pro celý plugin (např. talent-coaching)
+ln -s /cesta/k/datawizard-skills/plugins/talent-coaching/skills ~/.cursor/skills/talent-coaching
+```
+
+Po naklonování repa nastav cestu podle vlastního umístění:
+
+```bash
+git clone https://github.com/Karyzard/datawizard-skills.git ~/dev/datawizard-skills
+ln -s ~/dev/datawizard-skills/plugins/talent-coaching/skills ~/.cursor/skills/talent-coaching
+```
+
+## Pro vývoj a přispívání
+
+### Konvence
+
+- Každý plugin žije v `plugins/<name>/`
 - Plugin manifest: `plugins/<name>/.claude-plugin/plugin.json`
 - Skills: `plugins/<name>/skills/<skill-name>/SKILL.md`
-- All `SKILL.md` files use YAML frontmatter with `name` and `description`
+- Marketplace manifest (root): `.claude-plugin/marketplace.json`
+- Všechny `SKILL.md` mají YAML frontmatter s `name:` a `description:`
 
-## Development
+### Přidání nového skillu
 
-See `plugins/datawizard-core/` as the canonical example.
+1. Vyber plugin podle tématu (nebo založ nový)
+2. Vytvoř složku `plugins/<plugin>/skills/<new-skill>/`
+3. Napiš `SKILL.md` s frontmatter:
+   ```yaml
+   ---
+   name: new-skill
+   description: Stručně co skill dělá a kdy ho použít. Tento popis Claude používá pro auto-aktivaci.
+   ---
+   ```
+4. Pokud přidáváš celý nový plugin, přidej ho do `.claude-plugin/marketplace.json`
+5. Commit + push na main
+
+### Vzorový plugin
+
+Podívej se na [`plugins/datawizard-core/`](plugins/datawizard-core/) — nejjednodušší příklad se 3 skills a `rules/`.
+
+### Vzorový komplexní plugin
+
+[`plugins/product-design/`](plugins/product-design/) — 12 skills, většina s `references/` podadresářem pro hlubší dokumentaci.
+
+## Troubleshooting
+
+**`/plugin marketplace add` selhává s SSH chybou:**
+Repo musí být **veřejné**. Privátní repos nejdou (Claude Code 2026).
+
+**`Marketplace file not found`:**
+Repo nemá `.claude-plugin/marketplace.json` v rootu. Zkontroluj že existuje.
+
+**Plugin se nainstaluje ale skill nefunguje:**
+Restartuj Claude Code session (`/clear` nestačí — opravdu zavři a otevři okno).
+
+**Cursor nevidí skill:**
+Cursor neumí pluginy — musíš použít symlink do `~/.cursor/skills/`.
