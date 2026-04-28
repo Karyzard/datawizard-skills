@@ -1,0 +1,117 @@
+---
+import '../styles/global.css';
+import 'aos/dist/aos.css';
+import CookieConsent from '../components/CookieConsent.astro';
+import { ClientRouter } from 'astro:transitions';
+import { site, contact, seo, getJsonLdBusiness } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = `${site.name} | ${site.tagline}`,
+  description = site.description,
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageUrl = `${site.url}${seo.ogImage}`;
+---
+
+<!doctype html>
+<html lang={site.lang}>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalURL.href} />
+
+  <!-- Favicon — nahradit vlastními soubory v public/ -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content={site.themeColor} />
+
+  <!-- OG tags -->
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="cs_CZ" />
+  <meta property="og:url" content={canonicalURL.href} />
+  <meta property="og:image" content={ogImageUrl} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImageUrl} />
+
+  <!-- JSON-LD Structured Data — data z src/data/site.ts -->
+  <script type="application/ld+json" set:html={JSON.stringify(getJsonLdBusiness(description))} />
+
+  <ClientRouter />
+
+  <!-- GTM Consent Mode v2 defaults — musí běžet před GTM/GA -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(...args: unknown[]) { window.dataLayer.push(args); }
+    gtag('consent', 'default', {
+      analytics_storage: 'denied',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      wait_for_update: 500,
+    });
+  </script>
+
+  <!-- Turnstile se načítá lazy v Contact.astro při první interakci s formulářem -->
+
+  <!-- GTM (odkomentovat a nahradit GTM-XXXXXX svým container ID)
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-XXXXXX');</script>
+  -->
+</head>
+<body>
+  <!-- Skip navigation -->
+  <a href="#main-content"
+    class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:bg-accent focus:text-primary focus:px-4 focus:py-2 focus:rounded-lg focus:font-semibold">
+    Přejít na hlavní obsah
+  </a>
+
+  <!-- Atmospheric background — přizpůsobit barvu accent v rgba -->
+  <div class="fixed inset-0 z-0 pointer-events-none" aria-hidden="true"
+    style="background: radial-gradient(ellipse at 50% 0%, rgba(56,189,248,0.05) 0%, transparent 60%), radial-gradient(ellipse at 80% 100%, rgba(56,189,248,0.03) 0%, transparent 50%);">
+  </div>
+
+  <div class="relative z-10">
+    <slot />
+  </div>
+  <CookieConsent />
+
+  <script>
+    import AOS from 'aos';
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function initAOS() {
+      AOS.init({
+        duration: 500,
+        easing: 'ease-out',
+        once: true,
+        offset: 80,
+        disable: reduceMotion,
+      });
+    }
+    initAOS();
+    document.addEventListener('astro:page-load', initAOS);
+  </script>
+</body>
+</html>

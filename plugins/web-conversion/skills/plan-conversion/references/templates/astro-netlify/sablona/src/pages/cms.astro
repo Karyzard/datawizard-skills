@@ -1,0 +1,20 @@
+---
+import { site } from '../data/site';
+const target = '/admin/index.html';
+---
+
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0;url=${target}`} />
+    <meta name="robots" content="noindex" />
+    <title>Přesměrování do CMS | {site.name}</title>
+  </head>
+  <body>
+    <p>
+      Přesměrování do CMS. Pokud se stránka neotevře automaticky,
+      <a href={target}>pokračujte zde</a>.
+    </p>
+  </body>
+</html>

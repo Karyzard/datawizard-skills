@@ -1,0 +1,106 @@
+---
+import { form } from '../data/site';
+---
+
+<div
+  id="cookie-consent"
+  class="fixed bottom-0 left-0 right-0 z-[998] bg-secondary border-t border-border px-6 py-4 hidden"
+  data-consent-key={form.consentKey}
+>
+  <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+    <p class="text-sm text-text-muted text-center sm:text-left">
+      Tento web používá technicky nezbytné úložiště. Analytické a marketingové cookies používáme
+      pouze s vaším souhlasem. Více v
+      <a href="/zasady-ochrany-osobnich-udaju" class="text-accent hover:underline">zásadách ochrany osobních údajů</a>.
+    </p>
+    <div class="flex gap-3 shrink-0">
+      <button
+        id="cookie-reject"
+        class="px-4 py-2 text-sm rounded-lg border border-border text-text-muted hover:text-text hover:border-text-muted transition-colors cursor-pointer"
+      >
+        Pouze nezbytné
+      </button>
+      <button
+        id="cookie-accept"
+        class="px-4 py-2 text-sm rounded-lg bg-accent text-primary font-semibold hover:bg-accent-hover transition-colors cursor-pointer"
+      >
+        Přijmout vše
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  type ConsentValue = {
+    necessary: true;
+    analytics: boolean;
+    timestamp: number;
+    version: number;
+  };
+
+  const CONSENT_VERSION = 1;
+  const banner = document.getElementById('cookie-consent');
+  const CONSENT_KEY = banner?.dataset.consentKey ?? 'cookie_consent';
+
+  function buildConsent(analytics: boolean): ConsentValue {
+    return { necessary: true, analytics, timestamp: Date.now(), version: CONSENT_VERSION };
+  }
+
+  function saveConsent(consent: ConsentValue) {
+    localStorage.setItem(CONSENT_KEY, JSON.stringify(consent));
+  }
+
+  function loadConsent(): ConsentValue | null {
+    try {
+      const raw = localStorage.getItem(CONSENT_KEY);
+      return raw ? (JSON.parse(raw) as ConsentValue) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function applyConsent(consent: ConsentValue) {
+    const granted = consent.analytics ? 'granted' : 'denied';
+    window.dataLayer = window.dataLayer || [];
+    // @ts-ignore — gtag defined in BaseLayout
+    window.gtag?.('consent', 'update', {
+      analytics_storage: granted,
+      ad_storage: granted,
+      ad_user_data: granted,
+      ad_personalization: granted,
+    });
+  }
+
+  function showBanner() { banner?.classList.remove('hidden'); }
+  function hideBanner() { banner?.classList.add('hidden'); }
+
+  const existing = loadConsent();
+  if (existing) {
+    applyConsent(existing);
+  } else {
+    showBanner();
+  }
+
+  const acceptBtn = document.getElementById('cookie-accept');
+  const rejectBtn = document.getElementById('cookie-reject');
+
+  acceptBtn?.addEventListener('click', () => {
+    const consent = buildConsent(true);
+    saveConsent(consent);
+    applyConsent(consent);
+    hideBanner();
+  });
+
+  rejectBtn?.addEventListener('click', () => {
+    const consent = buildConsent(false);
+    saveConsent(consent);
+    applyConsent(consent);
+    hideBanner();
+  });
+
+  // Umožní footer odkaz "Nastavení cookies" znovu otevřít banner
+  window.__reopenCookies = () => {
+    localStorage.removeItem(CONSENT_KEY);
+    showBanner();
+  };
+</script>

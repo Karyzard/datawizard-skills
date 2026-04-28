@@ -1,0 +1,10 @@
+[build]
+  publish = ".next"
+  command = "npm run build"
+
+[build.environment]
+# Supabase public keys are safe to expose in client code
+SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SUPABASE_ANON_KEY,NEXT_PUBLIC_SUPABASE_URL"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

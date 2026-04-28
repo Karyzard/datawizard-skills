@@ -49,15 +49,21 @@ Note: `ui-ux-pro-max` included but review content — source was in `~/Documents
 - [ ] Update repo README with GitHub install instructions
 - [ ] Optionally: set up `.claude-plugin/marketplace.json` for `/plugin marketplace add karyzard/datawizard-skills`
 
-## Phase 6 — Cleanup old locations
+## Phase 6 — Cleanup old locations ✅ DONE 2026-04-28
 
-**⚠️ Only after all plugins are confirmed working from monorepo!**
+Archive: `_archive/2026-04-28-pre-cleanup/` (72 souborů, 544K). Viz `_archive/2026-04-28-pre-cleanup/README.md` pro detail co a proč.
 
-- [ ] Remove migrated commands from `~/.claude/commands/` (start.md, wrap.md, ship.md, generate-images.md, generate-prototype.md, prototype-feature.md)
-- [ ] Remove migrated skills from `~/.cursor/skills/` OR replace with symlinks to monorepo
-- [ ] Remove duplicate rules from `~/.cursor/rules/` (boundaries, naming, tone — keep `.mdc` files like `invoice-mover.mdc`, `skill-editing-sync.mdc`)
-- [ ] Uninstall old local-skills plugins from `~/.claude/plugins/cache/local-skills/` (design-thinking, hormozi-consultant, inizio-consultant) — replace with installs from new monorepo
-- [ ] Update `~/.claude/CLAUDE.md` references to rules paths if they break
+- [x] Removed migrated commands from `~/.claude/commands/`
+- [x] Removed migrated skills from `~/.cursor/skills/`
+- [x] Removed duplicate `.md` rules from `~/.cursor/rules/` (kept `.mdc` files)
+- [x] Removed `~/.claude/rules/workspace-docs-system.md` (now in skill)
+- [x] Removed `~/.claude/templates/workspace-docs/` (now in skill)
+- [x] Removed old local-skills plugins (design-thinking, hormozi-consultant, inizio-consultant) — kept setup-supabase-mcp
+- [x] Kept `~/.claude/rules/{boundaries,naming,tone}.md` — globální user rules
+
+Post-cleanup TODO:
+- [ ] Restart Claude Code → ověřit že cache duplicity zmizí
+- [ ] Po 1–2 týdnech smazat `_archive/2026-04-28-pre-cleanup/`
 
 ## Phase 7 — Cursor symlink strategy
 

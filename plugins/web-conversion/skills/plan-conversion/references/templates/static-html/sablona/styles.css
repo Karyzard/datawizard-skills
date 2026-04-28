@@ -1,0 +1,108 @@
+/* ==========================================================================
+   Custom Styles for Static HTML Template
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Web Fonts
+
+   Instructions:
+   1. Download your chosen fonts in WOFF2 format
+   2. Place them in a /fonts/ directory
+   3. Uncomment the @font-face declarations below
+   4. Update the font-family name and file paths
+   -------------------------------------------------------------------------- */
+
+/*
+@font-face {
+  font-family: 'HeadingFont';
+  src: url('/fonts/heading-font-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'HeadingFont';
+  src: url('/fonts/heading-font-semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BodyFont';
+  src: url('/fonts/body-font-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BodyFont';
+  src: url('/fonts/body-font-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BodyFont';
+  src: url('/fonts/body-font-semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+*/
+
+/* --------------------------------------------------------------------------
+   CSS Custom Properties
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* Font families — update these when you uncomment @font-face above */
+  --font-heading: 'HeadingFont', system-ui, -apple-system, sans-serif;
+  --font-sans: 'BodyFont', system-ui, -apple-system, sans-serif;
+}
+
+/* --------------------------------------------------------------------------
+   Smooth Scroll (with reduced motion respect)
+   -------------------------------------------------------------------------- */
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem; /* Account for fixed header height */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Form Success State
+   -------------------------------------------------------------------------- */
+
+.form-success {
+  opacity: 0.5;
+  pointer-events: none;
+  position: relative;
+}
+
+.form-success::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 1rem;
+  z-index: 1;
+}

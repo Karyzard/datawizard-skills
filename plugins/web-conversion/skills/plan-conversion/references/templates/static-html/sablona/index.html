@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{SITE_TITLE}}</title>
+  <meta name="description" content="{{SITE_DESCRIPTION}}">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{SITE_TITLE}}">
+  <meta property="og:description" content="{{SITE_DESCRIPTION}}">
+  <meta property="og:image" content="{{OG_IMAGE_URL}}">
+  <meta property="og:url" content="">
+  <meta property="og:locale" content="cs_CZ">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{SITE_TITLE}}">
+  <meta name="twitter:description" content="{{SITE_DESCRIPTION}}">
+  <meta name="twitter:image" content="{{OG_IMAGE_URL}}">
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+  <!-- Tailwind CSS 4 via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '{{PRIMARY_COLOR}}0d',
+              100: '{{PRIMARY_COLOR}}1a',
+              200: '{{PRIMARY_COLOR}}33',
+              300: '{{PRIMARY_COLOR}}4d',
+              400: '{{PRIMARY_COLOR}}80',
+              500: '{{PRIMARY_COLOR}}',
+              600: '{{PRIMARY_COLOR}}cc',
+              700: '{{PRIMARY_COLOR}}b3',
+              800: '{{PRIMARY_COLOR}}99',
+              900: '{{PRIMARY_COLOR}}80',
+            },
+            accent: {
+              50: '{{ACCENT_COLOR}}0d',
+              100: '{{ACCENT_COLOR}}1a',
+              200: '{{ACCENT_COLOR}}33',
+              300: '{{ACCENT_COLOR}}4d',
+              400: '{{ACCENT_COLOR}}80',
+              500: '{{ACCENT_COLOR}}',
+              600: '{{ACCENT_COLOR}}cc',
+              700: '{{ACCENT_COLOR}}b3',
+              800: '{{ACCENT_COLOR}}99',
+              900: '{{ACCENT_COLOR}}80',
+            },
+          },
+          fontFamily: {
+            heading: ['var(--font-heading)', 'system-ui', 'sans-serif'],
+            sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body class="font-sans text-gray-900 bg-white antialiased">
+
+  <!-- Skip to content (a11y) -->
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-primary-500 focus:text-white focus:px-4 focus:py-2 focus:rounded">
+    Přejít na obsah
+  </a>
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20">
+
+        <!-- Logo / Company name -->
+        <a href="#" class="text-xl font-heading font-bold text-primary-500 hover:text-primary-600 transition-colors">
+          {{COMPANY_NAME}}
+        </a>
+
+        <!-- Desktop navigation -->
+        <nav class="hidden md:flex items-center gap-8" aria-label="Hlavni navigace">
+          <a href="#sluzby" class="text-gray-600 hover:text-primary-500 transition-colors font-medium">Sluzby</a>
+          <a href="#o-nas" class="text-gray-600 hover:text-primary-500 transition-colors font-medium">O nas</a>
+          <a href="#kontakt" class="text-gray-600 hover:text-primary-500 transition-colors font-medium">Kontakt</a>
+          <a href="#kontakt" class="inline-flex items-center px-5 py-2.5 bg-primary-500 text-white font-medium rounded-lg hover:bg-primary-600 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+            Napiste nam
+          </a>
+        </nav>
+
+        <!-- Mobile menu button -->
+        <button
+          type="button"
+          id="mobile-menu-btn"
+          class="md:hidden inline-flex items-center justify-center p-2 rounded-lg text-gray-600 hover:text-primary-500 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          aria-label="Otevrit menu"
+        >
+          <!-- Hamburger icon -->
+          <svg class="h-6 w-6" id="menu-icon-open" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+          <!-- Close icon (hidden by default) -->
+          <svg class="h-6 w-6 hidden" id="menu-icon-close" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile menu (hidden by default) -->
+    <nav
+      id="mobile-menu"
+      class="hidden md:hidden border-t border-gray-100 bg-white"
+      aria-label="Mobilni navigace"
+    >
+      <div class="px-4 py-4 space-y-2">
+        <a href="#sluzby" class="mobile-nav-link block px-4 py-3 text-gray-600 hover:text-primary-500 hover:bg-gray-50 rounded-lg transition-colors font-medium">Sluzby</a>
+        <a href="#o-nas" class="mobile-nav-link block px-4 py-3 text-gray-600 hover:text-primary-500 hover:bg-gray-50 rounded-lg transition-colors font-medium">O nas</a>
+        <a href="#kontakt" class="mobile-nav-link block px-4 py-3 text-gray-600 hover:text-primary-500 hover:bg-gray-50 rounded-lg transition-colors font-medium">Kontakt</a>
+        <a href="#kontakt" class="mobile-nav-link block px-4 py-3 mt-2 text-center bg-primary-500 text-white font-medium rounded-lg hover:bg-primary-600 transition-colors">
+          Napiste nam
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ==================== MAIN CONTENT ==================== -->
+  <main id="main">
+
+    <!-- ========== HERO SECTION ========== -->
+    <section class="relative pt-32 sm:pt-40 pb-20 sm:pb-28 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 text-white overflow-hidden">
+      <!-- Decorative background element -->
+      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,255,255,0.1)_0%,_transparent_60%)]" aria-hidden="true"></div>
+
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-8 text-center">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold leading-tight mb-6">
+          {{HERO_TITLE}}
+        </h1>
+        <p class="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto mb-10">
+          {{HERO_SUBTITLE}}
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="#kontakt" class="inline-flex items-center justify-center px-8 py-3.5 bg-white text-primary-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-500">
+            {{CTA_PRIMARY}}
+          </a>
+          <a href="#sluzby" class="inline-flex items-center justify-center px-8 py-3.5 border-2 border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-500">
+            {{CTA_SECONDARY}}
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SERVICES SECTION ========== -->
+    <section id="sluzby" class="py-20 sm:py-28 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl sm:text-4xl font-heading font-bold text-gray-900 mb-4">
+            {{SERVICES_TITLE}}
+          </h2>
+          <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+            {{SERVICES_SUBTITLE}}
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+          <!-- Service card 1 -->
+          <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+            <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mb-6">
+              <svg class="w-6 h-6 text-primary-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-heading font-semibold text-gray-900 mb-3">{{SERVICE_1_TITLE}}</h3>
+            <p class="text-gray-600 leading-relaxed">{{SERVICE_1_DESCRIPTION}}</p>
+          </div>
+
+          <!-- Service card 2 -->
+          <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+            <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mb-6">
+              <svg class="w-6 h-6 text-primary-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-heading font-semibold text-gray-900 mb-3">{{SERVICE_2_TITLE}}</h3>
+            <p class="text-gray-600 leading-relaxed">{{SERVICE_2_DESCRIPTION}}</p>
+          </div>
+
+          <!-- Service card 3 -->
+          <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+            <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mb-6">
+              <svg class="w-6 h-6 text-primary-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-heading font-semibold text-gray-900 mb-3">{{SERVICE_3_TITLE}}</h3>
+            <p class="text-gray-600 leading-relaxed">{{SERVICE_3_DESCRIPTION}}</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== ABOUT SECTION ========== -->
+    <section id="o-nas" class="py-20 sm:py-28">
+      <div class="max-w-7xl mx-auto px-4 sm:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div>
+            <h2 class="text-3xl sm:text-4xl font-heading font-bold text-gray-900 mb-6">
+              {{ABOUT_TITLE}}
+            </h2>
+            <p class="text-lg text-gray-600 leading-relaxed mb-6">
+              {{ABOUT_TEXT_1}}
+            </p>
+            <p class="text-lg text-gray-600 leading-relaxed">
+              {{ABOUT_TEXT_2}}
+            </p>
+          </div>
+          <div class="bg-gray-100 rounded-2xl aspect-[4/3] flex items-center justify-center">
+            <!-- Replace with actual image -->
+            <span class="text-gray-400 text-sm">{{ABOUT_IMAGE}}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CONTACT SECTION ========== -->
+    <section id="kontakt" class="py-20 sm:py-28 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl sm:text-4xl font-heading font-bold text-gray-900 mb-4">
+            Kontaktujte nas
+          </h2>
+          <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+            {{CONTACT_SUBTITLE}}
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+
+          <!-- Contact form (2 columns) -->
+          <div class="lg:col-span-2">
+            <form
+              name="kontakt"
+              method="POST"
+              data-netlify="true"
+              netlify-honeypot="bot-field"
+              action="/?success=true#kontakt"
+              class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100"
+            >
+              <!-- Netlify Forms hidden fields -->
+              <input type="hidden" name="form-name" value="kontakt">
+
+              <!-- Honeypot spam protection (hidden from real users) -->
+              <p class="hidden" aria-hidden="true">
+                <label>Nevyplnujte toto pole: <input name="bot-field" tabindex="-1" autocomplete="off"></label>
+              </p>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Jmeno a prijmeni *</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    autocomplete="name"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors outline-none"
+                    placeholder="Jan Novak"
+                  >
+                </div>
+                <div>
+                  <label for="email" class="block text-sm font-medium text-gray-700 mb-2">E-mail *</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    autocomplete="email"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors outline-none"
+                    placeholder="jan@firma.cz"
+                  >
+                </div>
+              </div>
+
+              <div class="mb-6">
+                <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Telefon</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  autocomplete="tel"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors outline-none"
+                  placeholder="+420 123 456 789"
+                >
+              </div>
+
+              <div class="mb-6">
+                <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Zprava *</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  required
+                  rows="5"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors outline-none resize-y"
+                  placeholder="Jak vam muzeme pomoci?"
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                class="w-full sm:w-auto px-8 py-3.5 bg-primary-500 text-white font-semibold rounded-lg hover:bg-primary-600 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+              >
+                Odeslat zpravu
+              </button>
+            </form>
+
+            <!-- Form success message (shown via CSS when ?success=true) -->
+            <div id="form-success" class="hidden mt-6 bg-green-50 border border-green-200 rounded-2xl p-8 text-center">
+              <svg class="w-12 h-12 text-green-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <h3 class="text-xl font-heading font-semibold text-green-800 mb-2">Dekujeme za vasi zpravu!</h3>
+              <p class="text-green-700">Ozveme se vam co nejdrive.</p>
+            </div>
+          </div>
+
+          <!-- Contact info sidebar -->
+          <div class="space-y-8">
+            <div>
+              <h3 class="text-lg font-heading font-semibold text-gray-900 mb-3">Adresa</h3>
+              <p class="text-gray-600 leading-relaxed">
+                {{COMPANY_NAME}}<br>
+                {{COMPANY_ADDRESS}}
+              </p>
+            </div>
+            <div>
+              <h3 class="text-lg font-heading font-semibold text-gray-900 mb-3">Telefon</h3>
+              <a href="tel:{{COMPANY_PHONE}}" class="text-primary-500 hover:text-primary-600 transition-colors font-medium">
+                {{COMPANY_PHONE}}
+              </a>
+            </div>
+            <div>
+              <h3 class="text-lg font-heading font-semibold text-gray-900 mb-3">E-mail</h3>
+              <a href="mailto:{{COMPANY_EMAIL}}" class="text-primary-500 hover:text-primary-600 transition-colors font-medium">
+                {{COMPANY_EMAIL}}
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-gray-900 text-gray-400 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <span class="text-white font-heading font-bold">{{COMPANY_NAME}}</span>
+          <span class="mx-2">|</span>
+          <span>{{COMPANY_ADDRESS}}</span>
+        </div>
+        <div class="text-sm">
+          &copy; <span id="copyright-year"></span> {{COMPANY_NAME}}. Vsechna prava vyhrazena.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== COOKIE CONSENT ==================== -->
+  <div
+    id="cookie-consent"
+    class="fixed bottom-0 left-0 right-0 z-50 hidden"
+    role="dialog"
+    aria-label="Souhlas s cookies"
+    aria-modal="false"
+  >
+    <div class="bg-white border-t border-gray-200 shadow-lg p-4 sm:p-6">
+      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <p class="text-sm text-gray-600 leading-relaxed">
+          Tento web pouziva cookies pro zakladni funkcnost a analyzu navstevnosti.
+          Podrobnosti najdete v nasich
+          <a href="/zasady-ochrany-soukromi" class="text-primary-500 hover:underline">zasadach ochrany soukromi</a>.
+        </p>
+        <div class="flex gap-3 shrink-0">
+          <button
+            type="button"
+            onclick="rejectCookies()"
+            class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400"
+          >
+            Odmitnout
+          </button>
+          <button
+            type="button"
+            onclick="acceptCookies()"
+            class="px-4 py-2 text-sm font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
+          >
+            Prijmout
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SCRIPTS ==================== -->
+  <script>
+    // --- Copyright year ---
+    document.getElementById('copyright-year').textContent = new Date().getFullYear();
+
+    // --- Mobile menu toggle ---
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const iconOpen = document.getElementById('menu-icon-open');
+    const iconClose = document.getElementById('menu-icon-close');
+
+    function toggleMobileMenu() {
+      const isOpen = !mobileMenu.classList.contains('hidden');
+      mobileMenu.classList.toggle('hidden');
+      iconOpen.classList.toggle('hidden');
+      iconClose.classList.toggle('hidden');
+      menuBtn.setAttribute('aria-expanded', !isOpen);
+      menuBtn.setAttribute('aria-label', isOpen ? 'Otevrit menu' : 'Zavrit menu');
+    }
+
+    menuBtn.addEventListener('click', toggleMobileMenu);
+
+    // Close mobile menu on link click
+    document.querySelectorAll('.mobile-nav-link').forEach(function(link) {
+      link.addEventListener('click', function() {
+        if (!mobileMenu.classList.contains('hidden')) {
+          toggleMobileMenu();
+        }
+      });
+    });
+
+    // Close mobile menu on Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && !mobileMenu.classList.contains('hidden')) {
+        toggleMobileMenu();
+        menuBtn.focus();
+      }
+    });
+
+    // --- Smooth scroll for anchor links ---
+    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+      anchor.addEventListener('click', function(e) {
+        var targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        var target = document.querySelector(targetId);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Update URL without scrolling
+          history.pushState(null, '', targetId);
+        }
+      });
+    });
+
+    // --- Form success state ---
+    if (window.location.search.includes('success=true')) {
+      var form = document.querySelector('form[name="kontakt"]');
+      var successMsg = document.getElementById('form-success');
+      if (form && successMsg) {
+        form.classList.add('form-success');
+        successMsg.classList.remove('hidden');
+        successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    // --- Cookie consent ---
+    function showCookieConsent() {
+      var consent = localStorage.getItem('cookie-consent');
+      if (!consent) {
+        document.getElementById('cookie-consent').classList.remove('hidden');
+      }
+    }
+
+    function acceptCookies() {
+      localStorage.setItem('cookie-consent', 'accepted');
+      document.getElementById('cookie-consent').classList.add('hidden');
+      // Enable analytics here if needed
+    }
+
+    function rejectCookies() {
+      localStorage.setItem('cookie-consent', 'rejected');
+      document.getElementById('cookie-consent').classList.add('hidden');
+    }
+
+    // Show cookie consent banner after short delay
+    setTimeout(showCookieConsent, 1000);
+  </script>
+
+</body>
+</html>

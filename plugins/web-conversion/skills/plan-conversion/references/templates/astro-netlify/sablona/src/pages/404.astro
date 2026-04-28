@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout title={`Stránka nenalezena | ${site.name}`}>
+  <main id="main-content" class="min-h-[60vh] flex items-center justify-center px-4 sm:px-8">
+    <div class="text-center">
+      <h1 class="text-6xl font-bold text-accent mb-4">404</h1>
+      <p class="text-xl text-text-muted mb-8">Stránka nebyla nalezena</p>
+      <a href="/" class="inline-flex bg-accent text-primary px-6 py-3 font-semibold hover:bg-accent-hover transition-colors">
+        Zpět na úvodní stránku
+      </a>
+    </div>
+  </main>
+</BaseLayout>
