@@ -1,0 +1,67 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "datawizard-skills",
+  "description": "Thematic skill plugins for the OS Datawizard system — session management, content tools, client delivery, product design, business advice, talent coaching, and wiki tools.",
+  "owner": {
+    "name": "Karel Simek",
+    "email": "datawizard.bi@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "datawizard-core",
+      "description": "Markdown vault session workflow (start, wrap, ship) and global rules for the OS Datawizard system.",
+      "version": "0.1.0",
+      "author": { "name": "Karel Simek" },
+      "source": "./plugins/datawizard-core",
+      "category": "productivity"
+    },
+    {
+      "name": "content-tools",
+      "description": "Document conversion and processing tools — email-to-markdown, pdf-to-markdown, process-meeting-transcript, generate-images.",
+      "version": "0.1.0",
+      "author": { "name": "Karel Simek" },
+      "source": "./plugins/content-tools",
+      "category": "productivity"
+    },
+    {
+      "name": "client-delivery",
+      "description": "Client work tools — discovery process, advisory personas, project scaffolding.",
+      "version": "0.1.0",
+      "author": { "name": "Karel Simek" },
+      "source": "./plugins/client-delivery",
+      "category": "productivity"
+    },
+    {
+      "name": "product-design",
+      "description": "Complete product design and prototyping pipeline — Design Thinking process, wireframing, HTML prototyping, branding, backlog building, business cases, and UI/UX intelligence.",
+      "version": "0.1.0",
+      "author": { "name": "Karel Simek" },
+      "source": "./plugins/product-design",
+      "category": "productivity"
+    },
+    {
+      "name": "business-advice",
+      "description": "Business consultant personas — Hormozi direct-advice style and Inizio (Czech entrepreneur) style.",
+      "version": "0.1.0",
+      "author": { "name": "Karel Simek" },
+      "source": "./plugins/business-advice",
+      "category": "productivity"
+    },
+    {
+      "name": "talent-coaching",
+      "description": "Kasimaka talent coaching personas — coaching, decision-making, reflection, project review, sales preparation.",
+      "version": "0.1.0",
+      "author": { "name": "Karel Simek" },
+      "source": "./plugins/talent-coaching",
+      "category": "productivity"
+    },
+    {
+      "name": "wiki-tools",
+      "description": "Markdown wiki tools — ingest new content, lint quality, query knowledge base.",
+      "version": "0.1.0",
+      "author": { "name": "Karel Simek" },
+      "source": "./plugins/wiki-tools",
+      "category": "productivity"
+    }
+  ]
+}
