@@ -1,0 +1,9 @@
+{
+  "name": "content-tools",
+  "version": "0.1.0",
+  "description": "Document conversion and processing tools (email, PDF, transcripts, image generation)",
+  "author": {
+    "name": "Karel Simek",
+    "email": "datawizard.bi@gmail.com"
+  }
+}
