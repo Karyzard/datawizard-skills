@@ -68,7 +68,18 @@ Decide: do we symlink from `~/.cursor/skills/<plugin>` → monorepo, or copy? Sy
 ln -s /Users/karelsimek/Documents/_app-projects/datawizard-skills/plugins/talent-coaching/skills ~/.cursor/skills/talent-coaching
 ```
 
-## Phase 8 — New skill: `workspace-docs-setup`
+## Phase 8 — New skill: `workspace-docs-setup` ✅ DONE 2026-04-28
+
+Skill created in `plugins/datawizard-core/skills/workspace-docs-setup/` with:
+- `SKILL.md` (SETUP/AUDIT mode logic)
+- `templates/` (7 root file templates) + `templates/folder-stubs/` (10 CONTEXT.md stubs)
+- `references/` (workspace-docs-system, folder-numbering, naming, workspace-types, setup-checklist)
+
+Original sources still in place at `~/.claude/templates/workspace-docs/` and `~/.claude/rules/workspace-docs-system.md` — delete during Phase 6 cleanup.
+
+---
+
+## Phase 8 — Original spec (kept for reference)
 
 **Plugin:** `datawizard-core` (lifecycle skill — sedí vedle start/wrap/ship)
 
