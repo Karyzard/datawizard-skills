@@ -156,34 +156,73 @@ Vytvoř složku pomocí Shell nástroje (`mkdir -p`).
 
 ---
 
-## Krok 2 — Přejmenování souboru a přesun do složky
+## Krok 2 — JSON normalizace + přejmenování + přesun originálu
 
-### Pravidla pro název souboru
+### 2a) Pokud je vstup JSON — vyrob normalizovaný `.txt`
 
-- **Datum**: vezmi z názvu souboru (formát `MM-DD` nebo `DD-MM`) nebo z prvního timestampu v přepisu
-- **Rok**: pokud není explicitně řečeno jinak, použij aktuální rok
-- **Čas**: pokud je v názvu nebo přepisu, přidej ve formátu `HH-MM`
-- **Název**: stručný, max 6–8 slov, česky, výstižný obsah meetingu
+Pokud má vstupní soubor příponu `.json`:
 
-### Formát
+1. Načti a parsuj JSON.
+2. Detekuj strukturu podle klíčů (heuristika):
+
+| Formát | Detekce | Mapování |
+|---|---|---|
+| **Otter** | klíč `transcript_segments` nebo `utterances` s `speaker_name`, `start_time`, `text` | `speaker_name` → Speaker, `start_time` (sec) → `HH:MM:SS`, `text` |
+| **Whisper** | klíč `segments` s `start`, `end`, `text` (volitelně `speaker`) | `speaker` (nebo "Speaker 1") → Speaker, `start` → `HH:MM:SS`, `text` |
+| **Fireflies** | klíč `sentences` s `speaker_name`, `start_time`, `text` | jako Otter |
+| **Obecný** | jakékoli pole objektů s `text` + timestamp field + (volitelně) speaker | best-effort |
+
+3. Vyrob normalizovaný text ve formátu:
 
 ```
-YYYY-MM-DD Stručný název meetingu.txt
-YYYY-MM-DD HH-MM Stručný název meetingu.txt   ← pokud je dostupný čas
+HH:MM:SS Speaker N
+text první věty
+text druhé věty
+
+HH:MM:SS Speaker M
+text…
 ```
+
+4. **Pokud strukturu nelze detekovat** → ukaž prvních ~30 řádků JSONu a zeptej se uživatele, jak ho mapovat. Nikdy nehádej.
+
+### 2b) Pravidla pro název souboru
+
+- **Datum**: vezmi z názvu souboru (formát `MM-DD` nebo `DD-MM`) nebo z prvního timestampu v přepisu, jinak dnes.
+- **Rok**: pokud není explicitně řečeno jinak, aktuální rok.
+- **Čas**: pokud je v názvu nebo přepisu, přidej `HH-MM`.
+- **Název**: stručný, max 6–8 slov, česky, výstižný obsah meetingu.
+
+Formát podle `naming` z Kroku 1:
+
+- `diakritika` (default): `YYYY-MM-DD Stručný název meetingu.{txt,json,md}`
+- `kebab-case`: `YYYY-MM-DD-strucny-nazev-meetingu.{txt,json,md}`
+
+S časem: `YYYY-MM-DD HH-MM Stručný název.{txt,…}` nebo `YYYY-MM-DD-HH-MM-strucny-nazev.{txt,…}`.
+
+### 2c) Přesun originálu do cílové složky
+
+Originál se **přesune** (`mv`), ne kopíruje:
+
+```bash
+# JSON vstup
+mv "~/Downloads/original.json" "<cílová složka>/<YYYY-MM-DD nazev>.json"
+# zápis normalizovaného .txt vedle něj
+echo "<normalized>" > "<cílová složka>/<YYYY-MM-DD nazev>.txt"
+```
+
+```bash
+# TXT vstup
+mv "~/Downloads/original.txt" "<cílová složka>/<YYYY-MM-DD nazev>.txt"
+```
+
+Po přesunu **Downloads už soubor neobsahuje** — to je záměr (vyčistí Downloads).
 
 ### Příklady
 
-| Původní název | Nový název |
-|---|---|
-| `03-13 Návrh MVP fakturačního nástroje jako náhrady za FAPI-transcript.txt` | `2026-03-13 Návrh MVP fakturačního nástroje FAPI.txt` |
-| `03-13 Týdenní schůzka_ Projekt FEOS a předání pozice-transcript.txt` | `2026-03-13 Týdenní schůzka FEOS předání pozice.txt` |
-
-Přejmenuj soubor a přesuň ho do složky z Kroku 1 pomocí Shell nástroje (`mv`):
-
-```bash
-mv "původní-název.txt" "YYYY-MM-DD Kratky nazev ascii/YYYY-MM-DD Stručný název meetingu.txt"
-```
+| Vstup | Cílová složka | Soubory v ní |
+|---|---|---|
+| `~/Downloads/-kolen-apka-be77692c-c205.json` | `meetings/2026-06-15 RooPortal skoleni/` | `2026-06-15 RooPortal skoleni.json` + `2026-06-15 RooPortal skoleni.txt` |
+| `~/Downloads/03-13 MVP FAPI-transcript.txt` | `meetings/2026-03-13 MVP FAPI/` | `2026-03-13 Návrh MVP fakturačního nástroje FAPI.txt` |
 
 ---
 
