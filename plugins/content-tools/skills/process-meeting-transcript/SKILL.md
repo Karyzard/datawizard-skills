@@ -507,9 +507,12 @@ naming: kebab-case
 
 ## Poznámky
 
-- Zachovej originální `.txt` soubor — jen ho přejmenuj a přesuň do složky, nemazej
-- MD výstup vytvoř uvnitř stejné složky jako přejmenovaný TXT
-- Mluvčí identifikuj pokud je to možné z kontextu (jméno v přepisu, kontext tématu)
-- Délku meetingu odvoď z posledního timestampu v přepisu
-- **Cenzura off-topic úseků (Krok 2.5) je vždy opt-in a vyžaduje potvrzení uživatele** — nikdy ji neprováděj automaticky, ani když nevhodné pasáže detekuješ
-- Po cenzuře upozorni uživatele, že originální `.txt` byl přepsán a kolik úseků / minut bylo vynecháno
+- **Originál se po zpracování přesune** (`mv`) do cílové složky — v Downloads už zůstane.
+- Pokud byl vstup JSON, do cílové složky jde **JSON i normalizovaný `.txt`**.
+- MD výstup vytvoř uvnitř stejné složky jako přesunutý soubor, se stejným základním názvem (jen `.md` místo `.txt`/`.json`).
+- Mluvčí identifikuj pokud je to možné z kontextu (jméno v přepisu, kontext tématu).
+- Délku meetingu odvoď z posledního timestampu v přepisu.
+- **Cenzura off-topic úseků (Krok 2.5) je vždy opt-in a vyžaduje potvrzení uživatele** — nikdy ji neprováděj automaticky, ani když nevhodné pasáže detekuješ.
+- Po cenzuře upozorni uživatele, že originální `.txt` byl přepsán a kolik úseků / minut bylo vynecháno.
+- **Žádné průběžné potvrzování** — skill najde, přesune, vytvoří, hotovo. Jen Krok 2.5 (cenzura) má vlastní potvrzení.
+- **Report na závěr**: vypiš co se stalo — cesta k cílové složce, vytvořené soubory, použitá šablona, případně poznámka o idempotenci („použil jsem existující složku XYZ").
