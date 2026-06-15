@@ -412,16 +412,66 @@ Použij pro hlasové poznámky, osobní reflexe, diktované myšlenky (typicky j
 [Cokoliv dalšího důležitého]
 ```
 
+### Šablona — Školení / Workshop
+
+Použij pro školení, workshopy, výukové sessions s dominantním lektorem:
+
+```markdown
+# [Název školení]
+
+**Datum:** YYYY-MM-DD  
+**Typ:** Školení / Workshop  
+**Délka:** ~X min  
+**Lektor:** [jméno z kontextu nebo "Speaker 1"]  
+**Účastníci:** [pokud lze odvodit z otázek/jmen]
+
+---
+
+## Shrnutí
+
+[2–4 věty: o čem školení bylo, jaký byl cíl, pro koho]
+
+## Probraná témata
+
+- **[Téma 1]** — [1–2 věty co se k tomu řeklo]
+- **[Téma 2]** — [...]
+
+## Klíčové poznatky / takeaways
+
+- [Nejdůležitější myšlenky, principy, definice]
+- [...]
+
+## Praktické ukázky / příklady
+
+- [Co se demonstrovalo, jaké příklady padly]
+- [...]
+
+## Otázky a odpovědi
+
+- **Q:** [otázka z publika] → **A:** [odpověď lektora]
+- **Q:** [...] → **A:** [...]
+
+## Akční body / domácí úkol
+
+- [ ] [Co si mám vyzkoušet, dohledat, nastavit]
+- [ ] [...]
+
+## Zdroje a odkazy
+
+- [Cokoli, na co lektor odkazoval — knihy, weby, nástroje]
+```
+
 ---
 
 ## Jak vybrat šablonu
 
-- Uživatel řekne typ meetingu → použij příslušnou šablonu
-- Pokud typ není řečen, odvoď z obsahu přepisu:
-  - Více mluvčích + projekt/featurky/update → **Klientský meeting**
-  - Více mluvčích + interní status/plánování → **Týdenní / projektová schůzka**
-  - Jeden mluvčí + osobní reflexe/diktování myšlenek (ne schůzka) → **Osobní poznámka**
-- Výchozí šablona: **Klientský meeting**
+1. **Pokud uživatel řekne typ** → použij příslušnou šablonu.
+2. **Jinak odvoď z obsahu přepisu** v tomto pořadí:
+   - Jeden mluvčí + osobní reflexe / diktování myšlenek (ne výuka) → **Osobní poznámka**
+   - Jeden mluvčí dominuje + výuková struktura (témata, ukázky, otázky publika), monolog s tematickým členěním → **Školení / Workshop**
+   - Více mluvčích + interní status / plánování → **Týdenní / projektová schůzka**
+   - Více mluvčích + projekt / featurky / update se zákazníkem → **Klientský meeting**
+3. **Default**, když si nejsi jistý → **Klientský meeting**
 
 ---
 
