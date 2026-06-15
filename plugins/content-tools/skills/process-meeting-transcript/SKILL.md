@@ -73,37 +73,86 @@ Chová se jako B) s cestou `~/Downloads/`.
 
 ---
 
-## Krok 1 — Vytvoření složky
+## Krok 1 — Cílová složka
 
-### Pravidla pro název složky
+Cílová složka se určuje podle **CWD a workspace pravidel**, ne podle umístění originálu. Pravidla v pořadí priority — první, které sedí, vyhrává:
 
-- **Datum**: stejné jako u souboru (`YYYY-MM-DD`)
-- **Název**: max 3–5 slov, bez diakritiky, bez speciálních znaků, slova oddělená mezerou (nebo pomlčkou)
-- Složka leží ve stejném adresáři jako originální přepis — **kromě workspace FEOS_Apps** (viz níže).
+### Pravidlo (a) — FEOS pattern
 
-### FEOS_Apps workspace (Fitness revolution / FeOS)
+Pokud v CWD nebo v některém **rodiči** (až do `~/Documents/`) existuje složka `01-communications/01 meetings/` → použij ji.
 
-Pokud pracuješ v projektu **FEOS_Apps**, nepoužívej novou složku `Meetings/` v kořeni. Vytvoř podsložku v:
+- **Naming uvnitř**: kebab-case, bez diakritiky, slova spojená pomlčkou.
+- Vytvoř podsložku `YYYY-MM-DD-strucny-nazev-kebab/` uvnitř `01-communications/01 meetings/`.
 
-`01-communications/01 meetings/YYYY-MM-DD-strucny-nazev-kebab/`
+Detekce:
+```bash
+# zkusit najít vzestupně od CWD
+dir="$PWD"
+while [ "$dir" != "$HOME/Documents" ] && [ "$dir" != "/" ]; do
+  if [ -d "$dir/01-communications/01 meetings" ]; then
+    echo "FOUND: $dir/01-communications/01 meetings"
+    break
+  fi
+  dir="$(dirname "$dir")"
+done
+```
 
-Názvy souborů uvnitř: **kebab-case, bez diakritiky** (viz kořenový `AGENTS.md`, `01-communications/CONTEXT.md` a `01-communications/01 meetings/AGENTS.md`).
+### Pravidlo (b) — AGENTS.md / CLAUDE.md sekce `## Meetings`
 
-### Formát
+Pokud v CWD existuje `AGENTS.md` nebo `CLAUDE.md` a obsahuje sekci:
+
+```markdown
+## Meetings
+target: 02-meetings/
+naming: kebab-case   # volitelné; default = diakritika
+```
+
+→ Použij `target:` jako cílovou složku (relativně k CWD nebo absolutně) a `naming:` jako styl pro názvy uvnitř.
+
+Hodnoty `naming:`:
+- `kebab-case` — bez diakritiky, pomlčky (`2026-06-15-strucny-nazev`)
+- `diakritika` (default) — s diakritikou, mezery (`2026-06-15 Stručný název`)
+
+### Pravidlo (c) — zeptat se
+
+Pokud ani (a), ani (b) nesedí → zeptej se uživatele:
 
 ```
-YYYY-MM-DD Kratky nazev ascii/
+Nenašel jsem 01-communications/01 meetings/ ani sekci ## Meetings
+v AGENTS.md/CLAUDE.md. Kam mám vytvořit složku meetingu?
+
+1. ./Meetings/  (vytvořit v aktuální složce)
+2. ./           (vedle CWD, bez podsložky)
+3. Jinam — napiš cestu
 ```
+
+### Název nové složky
+
+- **Datum**: dnešní, nebo z názvu vstupního souboru / prvního timestampu v přepisu.
+- **Název**: 3–5 slov, výstižný.
+- **Formát názvu** podle `naming`:
+  - `diakritika`: `YYYY-MM-DD Kratky nazev` (bez diakritiky pro ASCII bezpečnost, mezery)
+  - `kebab-case`: `YYYY-MM-DD-strucny-nazev-kebab`
+
+### Idempotence — složka s dnešním datem už existuje
+
+Pokud v cíli **už existuje složka začínající dnešním datem** (např. `2026-06-15 RooPortal skoleni/` vytvořená dříve při přípravě):
+
+- **Použij ji**, nevytvářej novou ani ji nepřepisuj.
+- Přesuň do ní originál + případně nový `.txt` z JSONu + MD.
+- Pokud MD se stejným názvem už uvnitř existuje → suffix `v2`, `v3`, …
+
+**Pozor:** Idempotence se týká **jen přesné shody dnešního data** (`YYYY-MM-DD`). Složka se stejným tématem ale jiným datem se ignoruje (vytvoří se nová s dnešním datem).
 
 ### Příklady
 
-| Soubor | Složka |
-|---|---|
-| `2025-08-02 Závěrečné hodnocení s Vojtou a Mírou.txt` | `2025-08-02 Zaverecne hodnoceni parking/` |
-| `2026-03-13 Návrh MVP fakturačního nástroje FAPI.txt` | `2026-03-13 MVP fakturacni nastroj FAPI/` |
-| `2026-03-13 Týdenní schůzka FEOS předání pozice.txt` | `2026-03-13 Tydenni schuze FEOS/` |
+| Workspace | Vstup | Cílová složka |
+|---|---|---|
+| FEOS_Apps (má `01-communications/01 meetings/`) | RooPortal školení | `01-communications/01 meetings/2026-06-15-rooportal-skoleni/` |
+| RooPortal (`AGENTS.md` má `target: meetings/`) | Školení | `meetings/2026-06-15 RooPortal skoleni/` |
+| `~/tmp/` (žádný workspace) | Cokoli | Zeptá se |
 
-Vytvoř složku pomocí Shell nástroje (`mkdir`).
+Vytvoř složku pomocí Shell nástroje (`mkdir -p`).
 
 ---
 
