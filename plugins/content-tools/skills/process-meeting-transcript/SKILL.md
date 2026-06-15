@@ -484,6 +484,27 @@ Pokud uživatel ukáže na složku nebo více souborů:
 
 ---
 
+## Konvence workspace
+
+Skill respektuje per-workspace instrukce v `AGENTS.md` nebo `CLAUDE.md`. Pokud chceš v projektu nastavit cíl pro meetingy a styl pojmenování, přidej do `AGENTS.md` (nebo `CLAUDE.md`) sekci:
+
+```markdown
+## Meetings
+target: 02-meetings/
+naming: kebab-case
+```
+
+- **`target:`** — relativní (k CWD) nebo absolutní cesta. Skill v ní vytvoří složku s datem.
+- **`naming:`** — volitelné. `kebab-case` = bez diakritiky, slova spojená pomlčkou. Default `diakritika` = s diakritikou, slova oddělená mezerou.
+
+### Priorita pravidel
+
+1. **FEOS pattern**: pokud existuje `01-communications/01 meetings/` v CWD nebo nad ním, má přednost.
+2. **AGENTS.md / CLAUDE.md** sekce `## Meetings` v CWD.
+3. **Zeptat se** uživatele.
+
+---
+
 ## Poznámky
 
 - Zachovej originální `.txt` soubor — jen ho přejmenuj a přesuň do složky, nemazej
