@@ -507,7 +507,7 @@ naming: kebab-case
 
 ## Poznámky
 
-- **Originál se po zpracování přesune** (`mv`) do cílové složky — v Downloads už zůstane.
+- **Originál se po zpracování přesune** (`mv`) do cílové složky — v Downloads už nezůstane.
 - Pokud byl vstup JSON, do cílové složky jde **JSON i normalizovaný `.txt`**.
 - MD výstup vytvoř uvnitř stejné složky jako přesunutý soubor, se stejným základním názvem (jen `.md` místo `.txt`/`.json`).
 - Mluvčí identifikuj pokud je to možné z kontextu (jméno v přepisu, kontext tématu).
