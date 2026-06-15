@@ -1,13 +1,22 @@
 ---
 name: process-meeting-transcript
 description: >-
-  Zpracuje přepis meetingu nebo hlasové poznámky: přejmenuje soubor do formátu YYYY-MM-DD Stručný název.txt,
-  volitelně cenzuruje off-topic úseky v originálním přepisu a vytvoří strukturovaný Markdown výstup.
-  Použij kdykoli uživatel chce zpracovat přepis meetingu, hlasovou poznámku, přejmenovat transcript
-  soubor, vytáhnout shrnutí ze schůzky, nebo cenzurovat off-topic / nevhodné pasáže v přepisu.
-  Triggeruj na "zpracuj meeting", "zpracuj přepis", "zpracuj transcript", "přejmenuj meeting",
-  "zpracuj schůzku", "klientský meeting", "osobní poznámka", "hlasová poznámka", "voice memo",
-  "diktát", "cenzuruj přepis", "off-topic v přepisu". Komunikuj česky.
+  Zpracuje přepis meetingu, školení nebo hlasové poznámky. Defaultně najde
+  nejnovější přepis v ~/Downloads/ (.txt, .json, .vtt, .srt, .md), parsuje
+  JSON exporty (Otter, Whisper, Fireflies), přesune originál do cílové složky
+  v aktuálním workspace, volitelně cenzuruje off-topic úseky a vytvoří
+  strukturovaný Markdown výstup podle typu (klientský meeting / týdenní /
+  školení / osobní poznámka). Cílovou složku určuje podle pravidel workspace
+  (01-communications/01 meetings/ → AGENTS.md/CLAUDE.md sekce ## Meetings →
+  zeptat se). Použij kdykoli uživatel chce zpracovat přepis, hlasovou
+  poznámku, přejmenovat transcript, vytáhnout shrnutí ze schůzky, zpracovat
+  školení/workshop, nebo cenzurovat off-topic pasáže. Triggeruj na "zpracuj
+  meeting", "zpracuj přepis", "zpracuj transcript", "zpracuj poslední přepis",
+  "zpracuj poslední transcript", "zpracuj z Downloads", "najdi poslední
+  meeting", "přejmenuj meeting", "zpracuj schůzku", "klientský meeting",
+  "osobní poznámka", "hlasová poznámka", "voice memo", "diktát", "zpracuj
+  školení", "workshop přepis", "cenzuruj přepis", "off-topic v přepisu".
+  Komunikuj česky.
 ---
 
 # Zpracování přepisu meetingu
