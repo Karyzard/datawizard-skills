@@ -23,10 +23,53 @@ description: >-
 
 ## Co skill dělá
 
-1. **Vytvoří složku** s datem a krátkým ASCII názvem
-2. **Přejmenuje soubor** do formátu `YYYY-MM-DD Stručný název.txt` a přesune ho do složky
-3. **Volitelně cenzuruje off-topic úseky** v originálním `.txt` přepisu (osobní odbočky, nevhodný obsah)
-4. **Vytvoří Markdown soubor** se strukturovaným výstupem uvnitř složky
+1. **Najde vstupní soubor** (defaultně nejnovější přepis v `~/Downloads/`, nebo podle explicitní cesty)
+2. **Pokud je JSON, vyrobí normalizovaný `.txt`** (Otter / Whisper / Fireflies / obecný formát)
+3. **Určí cílovou složku** podle workspace pravidel (`01-communications/01 meetings/` → `AGENTS.md`/`CLAUDE.md` → zeptat se)
+4. **Vytvoří složku** s datem a názvem (idempotentně — pokud už existuje, použije ji)
+5. **Přesune originál a normalizovaný `.txt`** do složky
+6. **Volitelně cenzuruje off-topic úseky** v `.txt` přepisu
+7. **Vytvoří Markdown soubor** se strukturovaným výstupem podle typu (klientský / týdenní / školení / osobní)
+
+---
+
+## Krok 0 — Vstup (najdi soubor ke zpracování)
+
+Skill přijímá tři režimy vstupu, vyhodnocují se v tomto pořadí:
+
+### A) Explicitní cesta k souboru
+Uživatel uvede konkrétní soubor (např. `~/Downloads/foo.json`). Skill zpracuje přesně tento soubor. Přeskoč hledání.
+
+### B) Explicitní cesta ke složce
+Uživatel uvede složku (např. `~/Downloads/` nebo `./inbox/`). Skill v ní hledá nejnovější přepis algoritmem níže.
+
+### C) Žádný argument (default)
+Chová se jako B) s cestou `~/Downloads/`.
+
+### Algoritmus „najdi nejnovější přepis ve složce"
+
+1. Načti seznam **souborů** ve složce (ne podsložky):
+   ```bash
+   ls -lt <složka> | head -20
+   ```
+2. Seřaď podle modification time sestupně, vezmi prvních 10.
+3. Pro každý kandidát zkontroluj kritéria „je to přepis":
+   - **Formát**: `.txt`, `.json`, `.md`, `.vtt`, `.srt`, nebo bez přípony s textovým obsahem (test přes `file <path>` nebo přečtení prvních ~50 řádků).
+   - **Obsah** obsahuje aspoň jedno z:
+     - Timestampy: `HH:MM:SS`, `MM:SS`, `[HH:MM:SS]`, `[MM:SS]`
+     - Markery mluvčích: `Speaker 1`, `Speaker N:`, `[Speaker N]`
+     - U JSONu: pole `segments`, `utterances`, `transcript`, `sentences`, `paragraphs`, `transcript_segments`
+4. **První kandidát, který projde** → použij ho.
+5. **Pokud žádný z 10 neprojde** → vypiš seznam nalezených souborů (název + mtime + ~30 znaků náhledu) a zeptej se uživatele, který je to.
+
+### Příklady triggerování
+
+| Uživatel napíše | Skill udělá |
+|---|---|
+| `zpracuj poslední přepis` | Hledá v `~/Downloads/` |
+| `zpracuj ~/Downloads/foo.json` | Zpracuje přesně `foo.json` |
+| `zpracuj přepisy v ./inbox/` | Hledá v `./inbox/` |
+| `zpracuj školení` (žádná cesta) | Hledá v `~/Downloads/` |
 
 ---
 
