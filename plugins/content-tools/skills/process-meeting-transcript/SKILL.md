@@ -2,7 +2,7 @@
 name: process-meeting-transcript
 description: >-
   Zpracuje přepis meetingu, školení nebo hlasové poznámky. Defaultně najde
-  nejnovější přepis v ~/Downloads/ (.txt, .json, .vtt, .srt, .md), parsuje
+  nejnovější přepis napříč ./inbox/ a ~/Downloads/ (.txt, .json, .vtt, .srt, .md), parsuje
   JSON exporty (Otter, Whisper, Fireflies), přesune originál do cílové složky
   v aktuálním workspace, volitelně cenzuruje off-topic úseky a vytvoří
   strukturovaný Markdown výstup podle typu (klientský meeting / týdenní /
@@ -23,7 +23,7 @@ description: >-
 
 ## Co skill dělá
 
-1. **Najde vstupní soubor** (defaultně nejnovější přepis v `~/Downloads/`, nebo podle explicitní cesty)
+1. **Najde vstupní soubor** (defaultně nejnovější přepis napříč `./inbox/` a `~/Downloads/`, nebo podle explicitní cesty)
 2. **Pokud je JSON, vyrobí normalizovaný `.txt`** (Otter / Whisper / Fireflies / obecný formát)
 3. **Určí cílovou složku** podle workspace pravidel (`01-communications/01 meetings/` → `AGENTS.md`/`CLAUDE.md` → zeptat se)
 4. **Vytvoří složku** s datem a názvem (idempotentně — pokud už existuje, použije ji)
@@ -41,35 +41,42 @@ Skill přijímá tři režimy vstupu, vyhodnocují se v tomto pořadí:
 Uživatel uvede konkrétní soubor (např. `~/Downloads/foo.json`). Skill zpracuje přesně tento soubor. Přeskoč hledání.
 
 ### B) Explicitní cesta ke složce
-Uživatel uvede složku (např. `~/Downloads/` nebo `./inbox/`). Skill v ní hledá nejnovější přepis algoritmem níže.
+Uživatel uvede složku (např. `~/Downloads/` nebo `./inbox/`). Skill hledá nejnovější přepis **jen v této složce** algoritmem níže.
 
 ### C) Žádný argument (default)
-Chová se jako B) s cestou `~/Downloads/`.
+Skill prohledá **dva zdroje najednou** a vybere **globálně nejnovější** platný přepis:
 
-### Algoritmus „najdi nejnovější přepis ve složce"
+1. `./inbox/` v aktuální složce (CWD), pokud existuje.
+2. `~/Downloads/`.
 
-1. Načti seznam **souborů** ve složce (ne podsložky):
+Sloučí kandidáty z obou složek, seřadí podle modification time sestupně a vezme nejnovější, který projde kritérii „je to přepis". Nezáleží, ve které ze složek leží — rozhoduje mtime.
+
+### Algoritmus „najdi nejnovější přepis"
+
+1. Načti seznam **souborů** (ne podsložky) ze všech relevantních složek. Pro default (režim C) to jsou `./inbox/` (pokud existuje) **i** `~/Downloads/`:
    ```bash
-   ls -lt <složka> | head -20
+   # default: oba zdroje najednou, sloučené a seřazené podle mtime
+   ls -lt ./inbox/ ~/Downloads/ 2>/dev/null
    ```
-2. Seřaď podle modification time sestupně, vezmi prvních 10.
+   Pro režim B jen ta jedna zadaná složka.
+2. Seřaď všechny kandidáty napříč složkami podle modification time sestupně, vezmi prvních ~10.
 3. Pro každý kandidát zkontroluj kritéria „je to přepis":
    - **Formát**: `.txt`, `.json`, `.md`, `.vtt`, `.srt`, nebo bez přípony s textovým obsahem (test přes `file <path>` nebo přečtení prvních ~50 řádků).
    - **Obsah** obsahuje aspoň jedno z:
      - Timestampy: `HH:MM:SS`, `MM:SS`, `[HH:MM:SS]`, `[MM:SS]`
      - Markery mluvčích: `Speaker 1`, `Speaker N:`, `[Speaker N]`
      - U JSONu: pole `segments`, `utterances`, `transcript`, `sentences`, `paragraphs`, `transcript_segments`
-4. **První kandidát, který projde** → použij ho.
-5. **Pokud žádný z 10 neprojde** → vypiš seznam nalezených souborů (název + mtime + ~30 znaků náhledu) a zeptej se uživatele, který je to.
+4. **První kandidát, který projde** (= nejnovější napříč zdroji) → použij ho.
+5. **Pokud žádný z ~10 neprojde** → vypiš seznam nalezených souborů (název + zdroj + mtime + ~30 znaků náhledu) a zeptej se uživatele, který je to.
 
 ### Příklady triggerování
 
 | Uživatel napíše | Skill udělá |
 |---|---|
-| `zpracuj poslední přepis` | Hledá v `~/Downloads/` |
+| `zpracuj poslední přepis` | Prohledá `./inbox/` **i** `~/Downloads/`, vezme nejnovější |
 | `zpracuj ~/Downloads/foo.json` | Zpracuje přesně `foo.json` |
-| `zpracuj přepisy v ./inbox/` | Hledá v `./inbox/` |
-| `zpracuj školení` (žádná cesta) | Hledá v `~/Downloads/` |
+| `zpracuj přepisy v ./inbox/` | Hledá jen v `./inbox/` |
+| `zpracuj školení` (žádná cesta) | Prohledá `./inbox/` **i** `~/Downloads/`, vezme nejnovější |
 
 ---
 
