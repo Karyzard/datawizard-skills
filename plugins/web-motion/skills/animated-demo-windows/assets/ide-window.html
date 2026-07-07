@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="cs">
+<!--
+  PATTERN: Světlé editorové okno (VS Code light) s typewriter zápisem
+  ===================================================================
+  K čemu: hero vizuál "živý zápis do markdown souboru v IDE" — nadpisy se
+  píší po znacích, status řádky (✓ / ▸) naskakují fade-inem, na konci
+  blikající kurzor. Kulisy: traffic-light bar, tab bar s aktivním tabem,
+  breadcrumb, sidebar (Explorer), statusbar.
+
+  Klíčové parametry (v JS dole):
+  - rychlost psaní: 26 + Math.random()*40 ms / znak
+  - pauza po dopsání nadpisu: 260 ms
+  - status řádky: delay 420 ms (ok) / 200 ms před fade-inem (.25s),
+    další krok po 380 ms (ok) / 900 ms (run); prázdný "gap" řádek 140 ms
+  - start: IntersectionObserver threshold .3 + 500 ms odklad
+  - prefers-reduced-motion: vykreslí se finální stav okamžitě
+
+  Co přizpůsobit:
+  - barvy přes CSS proměnné (--accent je primární; zbytek GitHub-light paleta)
+  - obsah animace: pole `seq` (typy: h / ok / run / hl / gap)
+  - názvy souborů v tabech, breadcrumbu a sidebaru (kulisa — sladit s obsahem)
+  - sidebar se pod 560 px skrývá (media query) — okno zůstává použitelné
+-->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IDE window — demo pattern</title>
+<style>
+:root{
+  --bg:#f5f6f8;            /* pozadí stránky */
+  --panel:#ffffff;         /* okno */
+  --panel-2:#fafbfc;       /* tab bar / sidebar / statusbar */
+  --line:#e2e6ec;
+  --line-soft:#edf0f4;
+  --accent:#2563eb;        /* primární akcent (nadpisy, kurzor, aktivní tab) */
+  --accent-soft:#eff4ff;
+  --green:#1a7f37;         /* ✓ hotové kroky */
+  --run:#0969da;           /* běžící krok */
+  --amber:#9a6700;         /* zvýrazněný výsledek */
+  --text:#1c2330;
+  --mut:#57606f;
+  --mut-2:#8b93a3;
+  --gutter:#c3c9d4;        /* čísla řádků */
+  --mono:"IBM Plex Mono","SF Mono",Menlo,Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--bg);min-height:100vh;display:flex;align-items:center;
+  justify-content:center;padding:40px 20px;font-family:var(--mono);
+}
+/* ---- okno ---- */
+.ed{
+  width:100%;max-width:620px;
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  box-shadow:0 1px 2px rgba(16,24,40,.05),0 18px 44px -24px rgba(16,24,40,.16);
+  overflow:hidden;
+}
+.ed-bar{
+  display:flex;align-items:center;gap:8px;padding:10px 14px;
+  background:var(--panel-2);border-bottom:1px solid var(--line);
+}
+.ed-bar .d{width:11px;height:11px;border-radius:50%;border:1px solid rgba(0,0,0,.08)}
+.ed-bar .d1{background:#ff5f57}.ed-bar .d2{background:#febc2e}.ed-bar .d3{background:#28c840}
+.ed-bar .title{margin-left:10px;font-size:11.5px;color:var(--mut-2);letter-spacing:.04em}
+/* ---- tab bar ---- */
+.ed-tabs{display:flex;background:var(--panel-2);border-bottom:1px solid var(--line);overflow-x:auto}
+.ed-tab{
+  font-size:12px;color:var(--mut);padding:9px 16px;border-right:1px solid var(--line);
+  white-space:nowrap;display:flex;align-items:center;gap:7px;
+}
+.ed-tab .fi{color:var(--mut-2)}
+.ed-tab.on{background:#fff;color:var(--text);box-shadow:inset 0 2px 0 var(--accent)}
+.ed-tab.on .fi{color:var(--accent)}
+/* ---- breadcrumb ---- */
+.ed-crumb{
+  font-size:11px;color:var(--mut-2);padding:7px 16px;border-bottom:1px solid var(--line-soft);
+  background:#fff;display:flex;gap:7px;align-items:center;white-space:nowrap;overflow:hidden;
+}
+.ed-crumb .sep{color:var(--line)}
+.ed-crumb .cur{color:var(--mut)}
+/* ---- sidebar + tělo ---- */
+.ed-main{display:grid;grid-template-columns:148px 1fr;background:#fff}
+.ed-side{
+  border-right:1px solid var(--line-soft);background:var(--panel-2);
+  padding:14px 0;font-size:11.5px;color:var(--mut);line-height:2;user-select:none;
+}
+.ed-side .hd{font-size:10px;letter-spacing:.12em;color:var(--mut-2);padding:0 14px 6px;text-transform:uppercase}
+.ed-side .fi{padding:0 14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ed-side .fi.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.ed-side .fi .ic{color:var(--mut-2);margin-right:6px}
+.ed-side .fi.on .ic{color:var(--accent)}
+.ed-side .fi.lv2{padding-left:26px}
+.ed-body{padding:18px 20px 14px;font-size:13px;line-height:1.85;min-height:300px}
+.ed-body .ln{display:flex;gap:14px;white-space:pre-wrap;word-break:break-word}
+.ed-body .no{color:var(--gutter);user-select:none;min-width:2ch;text-align:right;flex-shrink:0;font-size:11px;padding-top:2px}
+.e-h{color:var(--accent);font-weight:600}
+.e-ok{color:var(--green)}
+.e-run{color:var(--run)}
+.e-hl{color:var(--amber);font-weight:600}
+.e-txt{color:var(--mut)}
+.cursor{
+  display:inline-block;width:8px;height:15px;background:var(--accent);
+  vertical-align:-2px;animation:blink 1s steps(1) infinite;
+}
+@keyframes blink{50%{opacity:0}}
+/* ---- statusbar ---- */
+.ed-status{
+  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding:7px 14px;border-top:1px solid var(--line);
+  background:var(--panel-2);font-size:11px;color:var(--mut);letter-spacing:.04em;
+}
+.ed-status .ok{color:var(--green);font-weight:600}
+@media (prefers-reduced-motion:reduce){
+  .cursor{animation:none}
+}
+@media(max-width:560px){
+  .ed-main{grid-template-columns:1fr}
+  .ed-side{display:none}
+}
+@media(max-width:480px){
+  .ed-body{font-size:12px;padding:14px 12px 12px}
+  .ed-body .ln{gap:9px}
+}
+</style>
+</head>
+<body>
+
+<div class="ed" aria-hidden="true">
+  <div class="ed-bar">
+    <span class="d d1"></span><span class="d d2"></span><span class="d d3"></span>
+    <span class="title">build — ~/muj-nastroj</span>
+  </div>
+  <div class="ed-tabs">
+    <div class="ed-tab on"><span class="fi">◆</span> muj-nastroj.md</div>
+    <div class="ed-tab"><span class="fi">◇</span> plan.md</div>
+    <div class="ed-tab"><span class="fi">▸</span> prototyp/</div>
+  </div>
+  <div class="ed-crumb">muj-nastroj <span class="sep">›</span> <span class="cur">muj-nastroj.md</span></div>
+  <div class="ed-main">
+    <div class="ed-side">
+      <div class="hd">Explorer</div>
+      <div class="fi"><span class="ic">▾</span>muj-nastroj</div>
+      <div class="fi on lv2"><span class="ic">◆</span>muj-nastroj.md</div>
+      <div class="fi lv2"><span class="ic">◇</span>plan.md</div>
+      <div class="fi lv2"><span class="ic">▸</span>prototyp/</div>
+      <div class="fi lv2"><span class="ic">◇</span>poznamky.md</div>
+    </div>
+    <div class="ed-body" id="ed"></div>
+  </div>
+  <div class="ed-status">
+    <span>UTF-8 · LF · Markdown</span>
+    <span class="ok" id="ed-state">● připraveno</span>
+  </div>
+</div>
+
+<script>
+(function () {
+  const ed = document.getElementById('ed');
+  const state = document.getElementById('ed-state');
+  if (!ed) return;
+
+  // sekvence: h = nadpis (píše se po znacích), ostatní naskočí po pauze
+  const seq = [
+    { t: 'h',   txt: '# muj-nastroj' },
+    { t: 'gap', txt: '' },
+    { t: 'h',   txt: '## 1 · plán' },
+    { t: 'ok',  txt: '✓ prostředí připraveno (závislosti, konfigurace)' },
+    { t: 'ok',  txt: '✓ projektový plán ze zadání' },
+    { t: 'gap', txt: '' },
+    { t: 'h',   txt: '## 2 · build' },
+    { t: 'run', txt: '▸ stavím prototyp… komponenty, data, logika' },
+    { t: 'ok',  txt: '✓ build úspěšný — 00:47:12' },
+    { t: 'gap', txt: '' },
+    { t: 'h',   txt: '## 3 · výsledek' },
+    { t: 'hl',  txt: '→ prototyp funguje. připravený k testu.' }
+  ];
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function makeLine(item, i) {
+    const ln = document.createElement('div');
+    ln.className = 'ln';
+    const no = document.createElement('span');
+    no.className = 'no';
+    no.textContent = i + 1;
+    const tx = document.createElement('span');
+    tx.className = { h: 'e-h', ok: 'e-ok', run: 'e-run', hl: 'e-hl', gap: 'e-txt' }[item.t];
+    ln.appendChild(no);
+    ln.appendChild(tx);
+    return { ln, tx };
+  }
+
+  // reduced-motion fallback: vykreslit finální stav okamžitě
+  function renderInstant() {
+    seq.forEach((item, i) => {
+      const { ln, tx } = makeLine(item, i);
+      tx.textContent = item.txt || ' ';
+      ed.appendChild(ln);
+    });
+    state.textContent = '✓ prototyp hotový';
+  }
+
+  function typeSequence() {
+    let i = 0;
+    state.textContent = '● píšu plán…';
+
+    function next() {
+      if (i >= seq.length) {
+        // finální blikající kurzor na novém řádku
+        const { ln, tx } = makeLine({ t: 'h' }, i);
+        tx.innerHTML = '<span class="cursor"></span>';
+        ed.appendChild(ln);
+        state.textContent = '✓ prototyp hotový';
+        return;
+      }
+      const item = seq[i];
+      const { ln, tx } = makeLine(item, i);
+      ed.appendChild(ln);
+
+      if (item.t === 'gap') {
+        tx.textContent = ' ';
+        i++;
+        setTimeout(next, 140);
+      } else if (item.t === 'h') {
+        // nadpis: psaní po znacích s kurzorem
+        const cur = document.createElement('span');
+        cur.className = 'cursor';
+        tx.appendChild(cur);
+        let c = 0;
+        (function typeChar() {
+          if (c < item.txt.length) {
+            cur.insertAdjacentText('beforebegin', item.txt[c]);
+            c++;
+            setTimeout(typeChar, 26 + Math.random() * 40);
+          } else {
+            setTimeout(() => { cur.remove(); i++; next(); }, 260);
+          }
+        })();
+      } else {
+        // status řádek: fade-in po krátké pauze
+        tx.style.opacity = '0';
+        tx.textContent = item.txt;
+        setTimeout(() => {
+          tx.style.transition = 'opacity .25s';
+          tx.style.opacity = '1';
+          i++;
+          setTimeout(next, item.t === 'run' ? 900 : 380);
+        }, item.t === 'ok' ? 420 : 200);
+      }
+    }
+    next();
+  }
+
+  if (reduced) { renderInstant(); return; }
+
+  // spustit, až je editor vidět
+  const tio = new IntersectionObserver((es) => {
+    es.forEach(e => {
+      if (e.isIntersecting) { tio.unobserve(e.target); setTimeout(typeSequence, 500); }
+    });
+  }, { threshold: .3 });
+  tio.observe(ed);
+})();
+</script>
+</body>
+</html>

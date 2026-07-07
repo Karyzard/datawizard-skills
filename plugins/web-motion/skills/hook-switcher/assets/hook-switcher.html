@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="cs">
+<!--
+  HOOK-SWITCHER — minimální funkční demo patternu.
+
+  K čemu: živé přepínání hero copy (headline + subhead) na prototypu,
+  aby šel porovnávat design a copy nezávisle. Interní nástroj — před
+  produkcí se celý blok mezi HOOK-SWITCHER komentáři odstraní a vítězný
+  hook se vloží napevno.
+
+  Integrace do existující stránky:
+  1. Hero headline dostane id="hook-headline", subhead id="hook-subhead"
+     (obsah elementů nech prázdný — naplní je switcher).
+  2. Zkopíruj blok mezi <!- - HOOK-SWITCHER - -> komentáři (panel + script)
+     těsně před </body> a CSS .hook-switcher do <style>.
+  3. Naplň pole HOOKS vlastními hooky; <em>/<b> stylizuje CSS stránky.
+  4. STORAGE_KEY drž stejný napříč variantami téhož projektu — volba
+     pak přežívá při přecházení mezi stránkami (porovnávání designů
+     se stejným hookem).
+
+  Přizpůsobit: --hs-* proměnné (barvy panelu), DEFAULT_ID, HOOKS.
+-->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hook-switcher — demo patternu</title>
+<style>
+:root{
+  --bg:#101216;
+  --text:#eef1f5;
+  --mut:#98a1ad;
+  --accent:#4cc2ff;
+  /* panel switcheru */
+  --hs-bg:rgba(16,18,22,.92);
+  --hs-line:rgba(255,255,255,.16);
+  --hs-mut:#98a1ad;
+  --hs-accent:#4cc2ff;
+  --hs-mono:ui-monospace,Menlo,Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;
+  display:grid;place-items:center;padding:32px;
+}
+.hero{max-width:720px}
+.hero h1{font-size:clamp(28px,5vw,52px);line-height:1.06;letter-spacing:-.02em;margin-bottom:20px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p{font-size:clamp(16px,2vw,19px);color:var(--mut);line-height:1.6;max-width:56ch}
+.hero p b{color:var(--text);font-weight:600}
+
+/* ============ HOOK-SWITCHER PANEL ============ */
+.hook-switcher{
+  position:fixed;right:16px;bottom:16px;z-index:200;
+  font-family:var(--hs-mono);font-size:11.5px;color:var(--hs-mut);
+  background:var(--hs-bg);border:1px solid var(--hs-line);border-radius:8px;
+  padding:8px 10px;display:flex;align-items:center;gap:8px;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  box-shadow:0 10px 30px -12px rgba(0,0,0,.7);
+}
+.hook-switcher button{
+  font-family:var(--hs-mono);font-size:13px;color:var(--hs-mut);background:none;
+  border:1px solid var(--hs-line);border-radius:5px;width:26px;height:26px;
+  cursor:pointer;transition:.15s;line-height:1;
+}
+.hook-switcher button:hover{color:var(--hs-accent);border-color:var(--hs-accent)}
+.hook-switcher .hs-label{min-width:11ch;text-align:center;color:var(--hs-accent);letter-spacing:.04em}
+.hook-switcher .hs-hint{color:var(--hs-mut);opacity:.6;font-size:10px;letter-spacing:.06em}
+@media(max-width:640px){.hook-switcher .hs-hint{display:none}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1 id="hook-headline"><!-- naplní hook-switcher --></h1>
+  <p id="hook-subhead"><!-- naplní hook-switcher --></p>
+</header>
+
+<!-- HOOK-SWITCHER: interní nástroj na porovnávání, před produkcí odstranit a napevno vložit vítězný hook -->
+<div class="hook-switcher" role="group" aria-label="Přepínač hooků (interní nástroj)">
+  <button type="button" id="hs-prev" aria-label="Předchozí hook">‹</button>
+  <span class="hs-label" id="hs-label"></span>
+  <button type="button" id="hs-next" aria-label="Další hook">›</button>
+  <span class="hs-hint">klávesy 1–3</span>
+</div>
+<script>
+const HOOKS = [
+  {
+    id: "problem",
+    label: "1 · problém",
+    headline: "Přestaň ztrácet <em>hodiny týdně</em> na rutině, kterou zvládne stroj.",
+    subhead: "Ukázkový hook č. 1 — úhel „bolest". Nahraď vlastním copy; <b>tučné</b> a <em>akcent</em> stylizuje CSS stránky."
+  },
+  {
+    id: "vysledek",
+    label: "2 · výsledek",
+    headline: "Za měsíc máš systém, který <em>pracuje za tebe.</em>",
+    subhead: "Ukázkový hook č. 2 — úhel „transformace". Každý hook = jedna hypotéza, kterou chceš otestovat."
+  },
+  {
+    id: "namitka",
+    label: "3 · námitka",
+    headline: "„Na tohle nemám čas." <em>Přesně proto</em> to potřebuješ.",
+    subhead: "Ukázkový hook č. 3 — úhel „zlomení námitky". Hook v reklamě musí odpovídat hero na landing page."
+  }
+];
+
+(function () {
+  const STORAGE_KEY = 'hook-switcher-demo'; // per projekt: stejný klíč na všech variantách
+  const DEFAULT_ID = 'problem';
+  const headline = document.getElementById('hook-headline');
+  const subhead = document.getElementById('hook-subhead');
+  const label = document.getElementById('hs-label');
+
+  let idx = HOOKS.findIndex(h => h.id === (localStorage.getItem(STORAGE_KEY) || DEFAULT_ID));
+  if (idx < 0) idx = Math.max(0, HOOKS.findIndex(h => h.id === DEFAULT_ID));
+
+  function apply(i) {
+    idx = (i + HOOKS.length) % HOOKS.length;
+    const h = HOOKS[idx];
+    headline.innerHTML = h.headline;
+    subhead.innerHTML = h.subhead;
+    label.textContent = h.label;
+    try { localStorage.setItem(STORAGE_KEY, h.id); } catch (e) {}
+  }
+
+  document.getElementById('hs-prev').addEventListener('click', () => apply(idx - 1));
+  document.getElementById('hs-next').addEventListener('click', () => apply(idx + 1));
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName)) return;
+    const n = parseInt(e.key, 10);
+    if (n >= 1 && n <= HOOKS.length) apply(n - 1);
+  });
+
+  apply(idx);
+})();
+</script>
+<!-- /HOOK-SWITCHER -->
+
+</body>
+</html>

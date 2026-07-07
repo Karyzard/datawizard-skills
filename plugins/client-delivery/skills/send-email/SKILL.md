@@ -89,11 +89,11 @@ Dobrý den,
 
 text emailu v Markdownu...
 
-S pozdravem
-**Karel Šimek**
-DatawizardCZ
-Tel.: 720 738 044
+S pozdravem,
 ```
+
+> **Podpis do těla nepiš.** Skript ho přidá sám podle pole `signature` (viz níže).
+> Draft zakonči jen pozdravem („S pozdravem," / „Měj se,").
 
 ### Frontmatter pole
 
@@ -102,26 +102,46 @@ Tel.: 720 738 044
 | `to` | ano | Příjemce — `Jméno <email>` nebo jen `email` |
 | `subject` | ano | Předmět zprávy |
 | `from` | ne | Odesílatel (pro kontext, Outlook použije aktivní účet) |
-| `signature` | ne | Podpis: `datawizard` (výchozí) nebo `tokada` — viz tabulka níže |
+| `signature` | ne | Profil odesílatele — `datawizard` (výchozí), `tokada`, nebo vlastní — viz níže |
 | `date` | ne | Datum draftu |
 | `type` | ne | Vždy `sent-email` |
 | `status` | ne | `draft` nebo `sent` |
 | `attachments` | ne | Seznam cest k přílohám (relativní k .md souboru nebo absolutní) |
 
-### Podpisy
+### Podpis / profil odesílatele
 
-| Hodnota `signature` | Podpis |
-|---------------------|--------|
-| `datawizard` (výchozí) | **Karel Šimek**, DatawizardCZ, Tel.: 720 738 044 |
-| `tokada` | **Karel Šimek**, Tokada, Tel.: 720 738 044 |
+Podpis se **nepíše do těla mailu** — skript ho vyrenderuje z profilu odesílatele a přidá na konec (do Outlooku jako HTML, do textového výstupu jako plain text). Profil vybírá pole `signature` ve frontmatter (výchozí `datawizard`).
 
-Při psaní emailu od nuly použij podpis podle hodnoty `signature` ve frontmatter. Pokud chybí, použij `datawizard`.
+**Profil = malý JSON** se čtyřmi poli (všechna volitelná kromě `name`):
+
+```json
+{
+  "name": "Karel Šimek",
+  "tagline": "Vývoj aplikací / webů • AI v produktivitě • Reporting",
+  "email": "Karel.Simek@datawizard.cz",
+  "phone": "+420 720 738 044"
+}
+```
+
+Přibalené profily (ukázka — Karel Šimek):
+
+| `signature` | Kdo | Soubor |
+|-------------|-----|--------|
+| `datawizard` (výchozí) | Karel Šimek — DatawizardCZ | `signatures/datawizard.json` |
+| `tokada` | Karel Šimek — Tokada | `signatures/tokada.json` |
+
+**Jak přidat sebe (jiný člen týmu):** zkopíruj `signatures/_template.json` na `<jméno>.json`, vyplň svoje údaje a ve frontmatter dej `signature: <jméno>`. Uložit ho můžeš dvěma způsoby:
+
+1. **Osobní override** → `~/.claude/email-signatures/<jméno>.json` — přežije update pluginu, nesdílí se. (Sem patří i osobní úprava `datawizard.json`.)
+2. **Sdílený v repu** → `signatures/<jméno>.json` — commitne se do `datawizard-skills`, dostanou ho všichni.
+
+Override v `~/.claude/email-signatures/` má přednost před přibaleným profilem. Pro pokročilý podpis (logo apod.) můžeš místo JSON vložit `<jméno>.html` s hotovým HTML blokem — použije se doslovně.
 
 ### Co skript dělá s Markdown body
 
 - Odstraní blockquoty na začátku (metadata draft) a úvodní `# Nadpis`
-- **Formát `outlook`**: Převede Markdown na HTML (Calibri, inline styly), otevře v Outlooku přes AppleScript
-- **Formát `text`**: Vypíše hlavičku (Komu, Předmět) + čistý Markdown body na stdout
+- **Formát `outlook`**: Převede Markdown na HTML (Calibri, inline styly), **připojí podpis odesílatele**, otevře v Outlooku přes AppleScript
+- **Formát `text`**: Vypíše hlavičku (Komu, Předmět) + čistý Markdown body + textový podpis na stdout
 
 ### Podporovaný Markdown
 

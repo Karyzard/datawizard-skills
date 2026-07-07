@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="cs">
+<!--
+  PATTERN: Terminálové okno s typewriter buildem (dark, fosforová zelená)
+  =======================================================================
+  K čemu: hero vizuál "živý build v terminálu" — příkazy se píší po znacích,
+  výstupy naskakují fade-inem, na konci blikající prompt. Traffic-light bar,
+  čísla řádků, statusbar se stavem.
+
+  Klíčové parametry (v JS dole):
+  - rychlost psaní: 26 + Math.random()*40 ms / znak (lidsky nepravidelné)
+  - pauza po dopsání příkazu: 260 ms; kurzor se pak přesune na další řádek
+  - výstupní řádky: delay 420 ms (ok) / 200 ms (ostatní) před fade-inem,
+    fade .25s, další krok po 380 ms (ok) / 900 ms (běžící "run" krok)
+  - start: IntersectionObserver threshold .3 + 500 ms odklad
+  - prefers-reduced-motion: celá sekvence se vykreslí okamžitě (renderInstant)
+
+  Co přizpůsobit:
+  - barvy přes CSS proměnné v :root (--green je primární akcent)
+  - obsah animace: pole `seq` (typy: cmd / ok / run / out / hl)
+  - titulek okna (.term-bar .title) a texty statusbaru
+  - min-height .term-body podle délky sekvence (zabrání poskočení layoutu)
+-->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terminal typewriter — demo pattern</title>
+<style>
+:root{
+  --bg:#0a0f0c;                    /* pozadí stránky */
+  --term-bg:#080d0a;               /* pozadí okna */
+  --line:rgba(148,255,186,.13);    /* rámečky */
+  --green:#46ff9a;                 /* primární akcent (prompt, ✓) */
+  --cyan:#5fe3ff;                  /* běžící krok */
+  --amber:#ffc857;                 /* zvýrazněný výsledek */
+  --text:#e9f4ec;
+  --mut:#8ba796;                   /* výstupy */
+  --mut-2:#5f7a6b;                 /* čísla řádků */
+  --mono:"IBM Plex Mono","SF Mono",Menlo,Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--bg);min-height:100vh;display:flex;align-items:center;
+  justify-content:center;padding:40px 20px;font-family:var(--mono);
+}
+/* ---- okno ---- */
+.term{
+  width:100%;max-width:560px;
+  background:var(--term-bg);border:1px solid var(--line);border-radius:10px;
+  box-shadow:0 40px 90px -30px rgba(0,0,0,.85);overflow:hidden;
+}
+.term-bar{
+  display:flex;align-items:center;gap:8px;padding:11px 14px;
+  background:rgba(148,255,186,.05);border-bottom:1px solid var(--line);
+}
+.term-bar .d{width:11px;height:11px;border-radius:50%}
+.term-bar .d1{background:#ff5f57}.term-bar .d2{background:#febc2e}.term-bar .d3{background:#28c840}
+.term-bar .title{margin-left:10px;font-size:11.5px;color:var(--mut);letter-spacing:.04em}
+/* ---- tělo s čísly řádků ---- */
+.term-body{padding:20px 20px 16px;font-size:13.5px;line-height:1.85;min-height:308px}
+.term-body .ln{display:flex;gap:14px;white-space:pre-wrap;word-break:break-word}
+.term-body .no{color:var(--mut-2);user-select:none;min-width:2ch;text-align:right;flex-shrink:0;font-size:11.5px;padding-top:2px}
+.t-cmd{color:var(--text)}
+.t-cmd .ps{color:var(--green);font-weight:600}
+.t-out{color:var(--mut)}
+.t-ok{color:var(--green)}
+.t-run{color:var(--cyan)}
+.t-hl{color:var(--amber)}
+.cursor{
+  display:inline-block;width:8px;height:16px;background:var(--green);
+  vertical-align:-2px;animation:blink 1s steps(1) infinite;
+}
+@keyframes blink{50%{opacity:0}}
+/* ---- statusbar ---- */
+.term-status{
+  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding:8px 14px;border-top:1px solid var(--line);
+  background:rgba(148,255,186,.05);font-size:11px;color:var(--mut);letter-spacing:.05em;
+}
+.term-status .ok{color:var(--green)}
+@media (prefers-reduced-motion:reduce){
+  .cursor{animation:none}
+}
+@media(max-width:480px){
+  .term-body{font-size:12px;padding:16px 12px 12px}
+  .term-body .ln{gap:9px}
+}
+</style>
+</head>
+<body>
+
+<div class="term" aria-hidden="true">
+  <div class="term-bar">
+    <span class="d d1"></span><span class="d d2"></span><span class="d d3"></span>
+    <span class="title">build — ~/muj-nastroj — zsh</span>
+  </div>
+  <div class="term-body" id="term"></div>
+  <div class="term-status">
+    <span>zsh · UTF-8</span>
+    <span class="ok" id="term-state">● připraveno</span>
+  </div>
+</div>
+
+<script>
+(function () {
+  const term = document.getElementById('term');
+  const state = document.getElementById('term-state');
+  if (!term) return;
+
+  // sekvence buildu: cmd = píše se po znacích, ostatní naskočí po pauze
+  const seq = [
+    { t: 'cmd', txt: 'tool init --projekt "muj-nastroj"' },
+    { t: 'ok',  txt: '✓ prostředí připraveno (závislosti, konfigurace)' },
+    { t: 'cmd', txt: 'tool plan --ze-zadani zadani.md' },
+    { t: 'ok',  txt: '✓ projektový plán vygenerován' },
+    { t: 'cmd', txt: 'tool build' },
+    { t: 'run', txt: '▸ stavím prototyp… komponenty, data, logika' },
+    { t: 'ok',  txt: '✓ build úspěšný — 00:47:12' },
+    { t: 'cmd', txt: 'open ./prototyp' },
+    { t: 'hl',  txt: '→ hotovo. nástroj běží.' }
+  ];
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function makeLine(item, i) {
+    const ln = document.createElement('div');
+    ln.className = 'ln';
+    const no = document.createElement('span');
+    no.className = 'no';
+    no.textContent = i + 1;
+    const tx = document.createElement('span');
+    tx.className = { cmd: 't-cmd', ok: 't-ok', run: 't-run', out: 't-out', hl: 't-hl' }[item.t];
+    ln.appendChild(no);
+    ln.appendChild(tx);
+    return { ln, tx };
+  }
+
+  // reduced-motion fallback: vykreslit finální stav okamžitě
+  function renderInstant() {
+    seq.forEach((item, i) => {
+      const { ln, tx } = makeLine(item, i);
+      if (item.t === 'cmd') tx.innerHTML = '<span class="ps">$</span> ' + item.txt;
+      else tx.textContent = item.txt;
+      term.appendChild(ln);
+    });
+    state.textContent = '✓ build úspěšný';
+  }
+
+  function typeSequence() {
+    let i = 0;
+    state.textContent = '● běží build…';
+
+    function next() {
+      if (i >= seq.length) {
+        // finální blikající prompt
+        const { ln, tx } = makeLine({ t: 'cmd' }, i);
+        tx.innerHTML = '<span class="ps">$</span> <span class="cursor"></span>';
+        term.appendChild(ln);
+        state.textContent = '✓ build úspěšný';
+        return;
+      }
+      const item = seq[i];
+      const { ln, tx } = makeLine(item, i);
+      term.appendChild(ln);
+
+      if (item.t === 'cmd') {
+        // příkaz: psaní po znacích, kurzor jede před textem
+        tx.innerHTML = '<span class="ps">$</span> ';
+        const cur = document.createElement('span');
+        cur.className = 'cursor';
+        tx.appendChild(cur);
+        let c = 0;
+        (function typeChar() {
+          if (c < item.txt.length) {
+            cur.insertAdjacentText('beforebegin', item.txt[c]);
+            c++;
+            setTimeout(typeChar, 26 + Math.random() * 40); // lidsky nepravidelný rytmus
+          } else {
+            setTimeout(() => { cur.remove(); i++; next(); }, 260);
+          }
+        })();
+      } else {
+        // výstup: fade-in po krátké "výpočetní" pauze
+        tx.style.opacity = '0';
+        tx.textContent = item.txt;
+        setTimeout(() => {
+          tx.style.transition = 'opacity .25s';
+          tx.style.opacity = '1';
+          i++;
+          setTimeout(next, item.t === 'run' ? 900 : 380); // "run" krok nechat déle běžet
+        }, item.t === 'ok' ? 420 : 200);
+      }
+    }
+    next();
+  }
+
+  if (reduced) { renderInstant(); return; }
+
+  // spustit, až je terminál vidět
+  const tio = new IntersectionObserver((es) => {
+    es.forEach(e => {
+      if (e.isIntersecting) { tio.unobserve(e.target); setTimeout(typeSequence, 500); }
+    });
+  }, { threshold: .3 });
+  tio.observe(term);
+})();
+</script>
+</body>
+</html>

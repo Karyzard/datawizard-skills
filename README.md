@@ -20,6 +20,8 @@ Repo: [github.com/Karyzard/datawizard-skills](https://github.com/Karyzard/datawi
 | [business-advice](plugins/business-advice/) | Konzultantské persony (Hormozi, Inizio) |
 | [talent-coaching](plugins/talent-coaching/) | Kasimaka talent koučovací persony |
 | [wiki-tools](plugins/wiki-tools/) | Markdown wiki — ingest, lint, query |
+| [web-conversion](plugins/web-conversion/) | Konverze web prototypů do produkčních stacků, scaffolding z šablon |
+| [web-motion](plugins/web-motion/) | Animovaná demo okna (terminál, IDE, blueprint, CRT) + hook-switcher pro hero copy |
 
 ## Instalace pro Claude Code
 
@@ -43,6 +45,8 @@ Po úspěchu uvidíš: `Successfully added marketplace: datawizard-skills`
 /plugin install business-advice@datawizard-skills
 /plugin install talent-coaching@datawizard-skills
 /plugin install wiki-tools@datawizard-skills
+/plugin install web-conversion@datawizard-skills
+/plugin install web-motion@datawizard-skills
 ```
 
 Nainstaluj jen ty, které potřebuješ.

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="cs">
+<!--
+  PATTERN: SVG pipeline schéma na blueprint výkresu (stroke-dashoffset kreslení)
+  ==============================================================================
+  K čemu: hero vizuál "technický výkres pipeline" — uzly (boxy) a spojovací
+  šipky se postupně kreslí jako tahy tuše. Kulisy: hlavička výkresu, kóta
+  (rozměrová čára) po straně, razítko, patička listu.
+
+  Klíčové triky:
+  - pathLength="1" na každém <rect>/<path> normalizuje délku tahu na 1,
+    takže stroke-dasharray:1 + stroke-dashoffset:1 → animace "drawline"
+    (to{stroke-dashoffset:0}) funguje pro libovolně dlouhý tvar bez měření
+  - texty a skupiny fadují přes "nodein" (opacity 0 → 1)
+  - choreografie přes delay třídy .t1–.t8 (0.15 / .65 / .95 / 1.5 / 1.9 /
+    2.45 / 2.85 / 3.3 s) — čára se vždy dokreslí těsně před svým cílovým uzlem
+  - drawline .7s ease, nodein .55s ease
+  - animace jsou definované až pod #schema.play → start řídí
+    IntersectionObserver (threshold .3), který přidá třídu .play
+  - prefers-reduced-motion: schéma se zobrazí celé okamžitě (CSS override)
+  - marker-end="url(#arr)" = šipky; barva markeru přes fill:var(--cyan-dim)
+
+  Co přizpůsobit:
+  - barvy přes CSS proměnné (--cyan akcent, --paper/--bg podklad)
+  - uzly a šipky přímo v SVG (viewBox 560×440; souřadnice v komentářích)
+  - delay třídy: přidej .t9… pro delší pipeline
+  - texty hlavičky/patičky/razítka (kulisa výkresu)
+-->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blueprint pipeline — demo pattern</title>
+<style>
+:root{
+  --bg:#0b2545;            /* blueprint navy */
+  --paper:#081b38;         /* plocha "papíru" */
+  --line:rgba(158,199,255,.22);
+  --grid-fine:rgba(158,199,255,.055);
+  --grid-major:rgba(158,199,255,.11);
+  --ink:#eaf2ff;
+  --mut:#9fb9dc;
+  --mut-2:#5f7ba6;
+  --cyan:#6fe3ff;          /* akcent — linky, čísla, zvýrazněný uzel */
+  --cyan-dim:#3fa9c9;
+  --cyan-soft:rgba(111,227,255,.10);
+  --mono:"Spline Sans Mono","IBM Plex Mono",Menlo,Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--bg);min-height:100vh;display:flex;align-items:center;
+  justify-content:center;padding:40px 20px;font-family:var(--mono);
+}
+/* rýsovací mřížka pod celou stránkou (jemná + hlavní rastr) */
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:
+    linear-gradient(var(--grid-fine) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid-fine) 1px,transparent 1px),
+    linear-gradient(var(--grid-major) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid-major) 1px,transparent 1px);
+  background-size:12px 12px,12px 12px,60px 60px,60px 60px;
+}
+/* ---- list výkresu ---- */
+.sheet{
+  width:100%;max-width:600px;
+  background:var(--paper);border:1px solid var(--line);border-radius:8px;
+  box-shadow:0 40px 90px -30px rgba(2,10,24,.9);overflow:hidden;position:relative;
+}
+.sheet-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:11px 16px;border-bottom:1px solid var(--line);
+  font-size:11px;color:var(--mut);letter-spacing:.1em;text-transform:uppercase;
+  background:var(--cyan-soft);
+}
+.sheet-head .no{color:var(--cyan)}
+.sheet-body{padding:22px 18px 8px;position:relative}
+.sheet-body svg{display:block;width:100%;height:auto}
+.stamp{
+  position:absolute;right:18px;bottom:14px;transform:rotate(-4deg);
+  border:2px solid var(--cyan-dim);outline:1px solid var(--cyan-dim);outline-offset:3px;
+  padding:7px 12px;font-size:10px;letter-spacing:.14em;
+  color:var(--cyan);text-transform:uppercase;line-height:1.7;opacity:.85;
+  background:rgba(8,27,56,.8);pointer-events:none;
+}
+.sheet-foot{
+  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding:9px 16px;border-top:1px solid var(--line);
+  font-size:10.5px;color:var(--mut-2);letter-spacing:.08em;text-transform:uppercase;
+  background:rgba(11,37,69,.5);
+}
+.sheet-foot .ok{color:var(--cyan)}
+/* ---- SVG třídy ---- */
+.s-box{fill:rgba(11,37,69,.55);stroke:var(--line);stroke-width:1}
+.s-box-hi{fill:var(--cyan-soft);stroke:var(--cyan);stroke-width:1.6}
+.s-wire{fill:none;stroke:var(--cyan-dim);stroke-width:1.4}
+.s-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;fill:var(--cyan);text-transform:uppercase}
+.s-txt{font-family:var(--mono);font-size:13.5px;font-weight:600;fill:var(--ink)}
+.s-sub{font-family:var(--mono);font-size:10.5px;fill:var(--mut)}
+.s-note{font-family:var(--mono);font-size:10px;letter-spacing:.08em;fill:var(--mut-2)}
+.s-txt-hi{font-family:var(--mono);font-size:14.5px;font-weight:700;fill:var(--cyan)}
+.s-dim{stroke:var(--cyan-dim);stroke-width:1;fill:none;opacity:.75}
+.s-dimtxt{font-family:var(--mono);font-size:10px;letter-spacing:.16em;fill:var(--cyan-dim);text-transform:uppercase}
+/* ---- postupné kreslení — spouští se až třídou .play ---- */
+#schema .draw{stroke-dasharray:1;stroke-dashoffset:1}
+#schema .node{opacity:0}
+#schema.play .draw{animation:drawline .7s ease forwards}
+#schema.play .node{animation:nodein .55s ease forwards}
+@keyframes drawline{to{stroke-dashoffset:0}}
+@keyframes nodein{to{opacity:1}}
+#schema.play .t1{animation-delay:.15s}
+#schema.play .t2{animation-delay:.65s}
+#schema.play .t3{animation-delay:.95s}
+#schema.play .t4{animation-delay:1.5s}
+#schema.play .t5{animation-delay:1.9s}
+#schema.play .t6{animation-delay:2.45s}
+#schema.play .t7{animation-delay:2.85s}
+#schema.play .t8{animation-delay:3.3s}
+/* reduced-motion: finální stav okamžitě */
+@media (prefers-reduced-motion:reduce){
+  #schema .draw,#schema.play .draw{animation:none;stroke-dashoffset:0}
+  #schema .node,#schema.play .node{animation:none;opacity:1}
+}
+@media(max-width:480px){
+  .stamp{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="sheet" aria-hidden="true">
+  <div class="sheet-head"><span>VÝKRES <span class="no">Č. 01</span> — schéma pipeline</span><span>měřítko 1:1</span></div>
+  <div class="sheet-body">
+    <svg id="schema" viewBox="0 0 560 440" role="img" aria-label="Schéma: zadání, projektový plán, agenti stavějí paralelně, hotový nástroj">
+      <defs>
+        <marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L8,4 L0,8 z" fill="var(--cyan-dim)"/>
+        </marker>
+      </defs>
+
+      <!-- kóta vlevo: celý průběh -->
+      <g class="node t8">
+        <path class="s-dim" d="M36,22 h10 M36,414 h10 M41,22 v392"/>
+        <text class="s-dimtxt" transform="rotate(-90 26 218)" x="26" y="218" text-anchor="middle">← 1 pipeline →</text>
+      </g>
+
+      <!-- uzel 1: vstup -->
+      <g class="node t1">
+        <rect class="s-box draw t1" pathLength="1" x="150" y="20" width="260" height="58"/>
+        <text class="s-lbl" x="280" y="42" text-anchor="middle">VSTUP · IN-01</text>
+        <text class="s-txt" x="280" y="63" text-anchor="middle">zadání nástroje</text>
+      </g>
+      <path class="s-wire draw t2" pathLength="1" d="M280,78 V114" marker-end="url(#arr)"/>
+
+      <!-- uzel 2: plán -->
+      <g class="node t3">
+        <rect class="s-box draw t3" pathLength="1" x="150" y="120" width="260" height="58"/>
+        <text class="s-lbl" x="280" y="142" text-anchor="middle">DÍL · PLN-02</text>
+        <text class="s-txt" x="280" y="163" text-anchor="middle">projektový plán</text>
+      </g>
+
+      <!-- fan-out na tři paralelní větve -->
+      <path class="s-wire draw t4" pathLength="1" d="M280,178 V206 H100 V230" marker-end="url(#arr)"/>
+      <path class="s-wire draw t4" pathLength="1" d="M280,178 V230" marker-end="url(#arr)"/>
+      <path class="s-wire draw t4" pathLength="1" d="M280,178 V206 H460 V230" marker-end="url(#arr)"/>
+
+      <!-- uzly 3a–3c: paralelní práce -->
+      <g class="node t5">
+        <rect class="s-box draw t5" pathLength="1" x="28" y="236" width="144" height="54"/>
+        <text class="s-lbl" x="100" y="257" text-anchor="middle">AG-01</text>
+        <text class="s-sub" x="100" y="276" text-anchor="middle">staví ui</text>
+      </g>
+      <g class="node t5">
+        <rect class="s-box draw t5" pathLength="1" x="208" y="236" width="144" height="54"/>
+        <text class="s-lbl" x="280" y="257" text-anchor="middle">AG-02</text>
+        <text class="s-sub" x="280" y="276" text-anchor="middle">staví data</text>
+      </g>
+      <g class="node t5">
+        <rect class="s-box draw t5" pathLength="1" x="388" y="236" width="144" height="54"/>
+        <text class="s-lbl" x="460" y="257" text-anchor="middle">AG-03</text>
+        <text class="s-sub" x="460" y="276" text-anchor="middle">staví logiku</text>
+      </g>
+      <g class="node t5">
+        <text class="s-note" x="532" y="230" text-anchor="end">agenti stavějí — paralelně</text>
+      </g>
+
+      <!-- konvergence zpět do jedné větve -->
+      <path class="s-wire draw t6" pathLength="1" d="M100,290 V318 H272"/>
+      <path class="s-wire draw t6" pathLength="1" d="M460,290 V318 H288"/>
+      <path class="s-wire draw t6" pathLength="1" d="M280,290 V344" marker-end="url(#arr)"/>
+
+      <!-- uzel 4: výsledek (zvýrazněný) -->
+      <g class="node t7">
+        <rect class="s-box-hi draw t7" pathLength="1" x="130" y="350" width="300" height="64"/>
+        <text class="s-txt-hi" x="280" y="378" text-anchor="middle">✓ HOTOVÝ NÁSTROJ</text>
+        <text class="s-sub" x="280" y="398" text-anchor="middle">připravený k testu</text>
+      </g>
+    </svg>
+    <div class="stamp">PIPELINE · rev. 1<br>demo pattern</div>
+  </div>
+  <div class="sheet-foot">
+    <span>list 1/1 · projekce: tvůj projekt</span>
+    <span class="ok">● schváleno k testu</span>
+  </div>
+</div>
+
+<script>
+(function () {
+  const svg = document.getElementById('schema');
+  if (!svg) return;
+  // reduced-motion řeší CSS (finální stav) — .play pak nic nespustí,
+  // ale přidáme ji stejně, ať je chování konzistentní
+  const io = new IntersectionObserver((es) => {
+    es.forEach(e => {
+      if (e.isIntersecting) { io.unobserve(e.target); svg.classList.add('play'); }
+    });
+  }, { threshold: .3 });
+  io.observe(svg);
+})();
+</script>
+</body>
+</html>

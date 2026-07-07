@@ -15,7 +15,10 @@ Frontmatter fields:
     from:        Sender identity — not used by script but kept for context
     attachments: List of file paths (alternative to --attachment flags)
 """
+from __future__ import annotations
+
 import argparse
+import json
 import os
 import re
 import subprocess
@@ -246,6 +249,90 @@ def wrap_html(body_html: str) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Sender profile / signature
+#
+# The signature is NOT typed into the Markdown body — it's rendered here from a
+# reusable sender profile so every mail from a given sender looks identical and
+# a new team member configures their own once. The `signature:` frontmatter
+# field picks the profile (default: datawizard).
+# ---------------------------------------------------------------------------
+
+# User overrides live outside the plugin so they survive plugin updates.
+USER_SIGNATURE_DIR = os.path.expanduser("~/.claude/email-signatures")
+# Bundled defaults ship with the skill (…/send-email/signatures/).
+BUNDLED_SIGNATURE_DIR = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "..", "signatures"
+)
+
+
+def load_sender_profile(name: str) -> dict | None:
+    """Resolve a sender profile by name. First hit wins:
+
+        1. ~/.claude/email-signatures/<name>.json   (user override)
+        2. ~/.claude/email-signatures/<name>.html   (user raw-HTML override)
+        3. <skill>/signatures/<name>.json           (bundled default)
+        4. <skill>/signatures/<name>.html           (bundled raw HTML)
+
+    Returns the profile dict (fields), {"html": "..."} for raw HTML, or None.
+    """
+    name = (name or "datawizard").strip()
+    for base in (USER_SIGNATURE_DIR, BUNDLED_SIGNATURE_DIR):
+        json_path = os.path.join(base, f"{name}.json")
+        if os.path.isfile(json_path):
+            with open(json_path, encoding="utf-8") as f:
+                return json.load(f)
+        html_path = os.path.join(base, f"{name}.html")
+        if os.path.isfile(html_path):
+            with open(html_path, encoding="utf-8") as f:
+                return {"html": f.read().strip()}
+    return None
+
+
+def signature_html(profile: dict | None) -> str:
+    """Render a sender profile as an Outlook-friendly HTML signature block."""
+    if not profile:
+        return ""
+    if profile.get("html"):
+        return "\n" + profile["html"]
+    parts = [
+        '<div style="margin-top:16px;font-family:Calibri,Arial,sans-serif;'
+        'font-size:14px;line-height:1.5;color:#000000;">'
+    ]
+    if profile.get("name"):
+        parts.append(f'  <p style="margin:0 0 2px 0;"><strong>{profile["name"]}</strong></p>')
+    if profile.get("tagline"):
+        parts.append(f'  <p style="margin:0 0 8px 0;color:#595959;">{profile["tagline"]}</p>')
+    if profile.get("email"):
+        parts.append(
+            f'  <p style="margin:0 0 2px 0;">📧 <a href="mailto:{profile["email"]}" '
+            f'style="color:#0563C1;text-decoration:none;">{profile["email"]}</a></p>'
+        )
+    if profile.get("phone"):
+        tel = re.sub(r"[^0-9+]", "", profile["phone"])
+        parts.append(
+            f'  <p style="margin:0;">📱 <a href="tel:{tel}" '
+            f'style="color:#0563C1;text-decoration:none;">{profile["phone"]}</a></p>'
+        )
+    parts.append("</div>")
+    return "\n" + "\n".join(parts)
+
+
+def signature_text(profile: dict | None) -> str:
+    """Render a sender profile as a plain-text signature (for --format text)."""
+    if not profile:
+        return ""
+    if profile.get("html"):
+        txt = re.sub(r"<[^>]+>", "", profile["html"])
+        return "\n\n" + re.sub(r"\n{2,}", "\n", txt).strip()
+    lines = [profile[k] for k in ("name", "tagline") if profile.get(k)]
+    if profile.get("email"):
+        lines.append(f'📧 {profile["email"]}')
+    if profile.get("phone"):
+        lines.append(f'📱 {profile["phone"]}')
+    return "\n\n" + "\n".join(lines) if lines else ""
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -320,6 +407,9 @@ def main() -> None:
             print(f"Varování: příloha nenalezena: {att}", file=sys.stderr)
         resolved.append(att)
 
+    # Resolve the sender's signature profile (frontmatter `signature:`)
+    profile = load_sender_profile(meta.get("signature", "datawizard"))
+
     # --- Plain text output ---
     if args.format == "text":
         recipient = f"{to_name} <{to_email}>" if to_name else to_email
@@ -329,11 +419,12 @@ def main() -> None:
             print(f"Přílohy: {', '.join(os.path.basename(a) for a in resolved)}")
         print()
         print(body)
+        print(signature_text(profile))
         return
 
     # --- Outlook output ---
     body_html = md_to_html(body)
-    full_html = wrap_html(body_html)
+    full_html = wrap_html(body_html + signature_html(profile))
 
     script = build_applescript(subject, to_name, to_email, full_html, resolved)
     result = subprocess.run(["osascript", "-e", script], capture_output=True, text=True)

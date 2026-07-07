@@ -70,6 +70,14 @@
       "author": { "name": "Karel Simek" },
       "source": "./plugins/web-conversion",
       "category": "development"
+    },
+    {
+      "name": "web-motion",
+      "description": "Animated and interactive web patterns — animated demo windows (terminal typewriter, IDE, blueprint pipeline, CRT boot) and hook-switcher for live hero copy comparison on prototypes.",
+      "version": "0.1.0",
+      "author": { "name": "Karel Simek" },
+      "source": "./plugins/web-motion",
+      "category": "development"
     }
   ]
 }
