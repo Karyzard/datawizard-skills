@@ -2,7 +2,7 @@
 
 Checklist pro **zavedení standardu** v novém nebo existujícím workspace.
 
-> Reference: [`~/.claude/rules/workspace-docs-system.md`](../../rules/workspace-docs-system.md)
+> Reference: [`workspace-docs-system.md`](workspace-docs-system.md)
 
 ---
 
@@ -11,17 +11,24 @@ Checklist pro **zavedení standardu** v novém nebo existujícím workspace.
 - [ ] **Krok 1 — Root soubory**
   - [ ] Zkopíruj `README.md` z templates → vyplň placeholdery
   - [ ] Zkopíruj `AGENTS.md` z templates → uprav routing tabulku pro tento workspace
+  - [ ] Zkopíruj `CLAUDE.md` z templates (tenký `@AGENTS.md` ukazatel)
+  - [ ] Klientský projekt: zkopíruj `00-kickoff.md` (seed formulář)
   - [ ] Zkopíruj `ONBOARDING.md` z templates → uprav role a kontaktní osoby
+  - [ ] Git repo: zkopíruj `agent.local.md.example` + config soubory z `templates/config/` (`.gitignore`, `.gitattributes`, `.editorconfig`, `.cursorindexingignore`)
   - [ ] (Volitelně) Vytvoř `DEVELOPMENT-PROCESS.md`, `TODO.md`, `IDEAS.md`
 
 - [ ] **Krok 2 — Top-level složky**
   - [ ] Vytvoř top-level složky s prefix čísly (`0X-`, `1X-`, ...)
-  - [ ] Do každé vlož `CONTEXT.md` z templates
+  - [ ] Do každé vlož `CONTEXT.md` z templates (folder-stubs, nebo generický)
   - [ ] Vyplň placeholdery v každém CONTEXT.md (k čemu složka, podsložky, čtení)
+  - [ ] `01-communications/` → podsložky `01-meetings/`, `02-messages/`, `03-summaries/`
+  - [ ] `02-project-mgmt/` → `ROADMAP.md`, `packages/10-draft…40-done/`, `nabidky/` + `nabidky.md`, `templates/package/`, `templates/nabidka/`
 
-- [ ] **Krok 3 — Automatizace**
-  - [ ] Vytvoř `.claude/templates/` a vlož kopii `CONTEXT.md`
-  - [ ] Vytvoř `.claude/commands/sync-docs.md` z templates
+- [ ] **Krok 3 — Automatizace (`.agents/` + tenké wrappery)**
+  - [ ] Zkopíruj `templates/dotfolders/agents/` → `.agents/` (README, plugins.md, commands/, skills/)
+  - [ ] Vlož kopii `CONTEXT.md` šablony do `.agents/templates/`
+  - [ ] Zkopíruj wrappery: `.claude/` (commands + skills pointery), `.cursor/` (rules/000-agents.mdc + commands), `.github/` (copilot-instructions.md + prompts), `.vscode/` (extensions.json + settings.json)
+  - [ ] Vyplň `{{ Workspace Name }}` ve wrapperech
   - [ ] (Volitelně) Vytvoř `.claude/settings.local.json` s lokálními permissions
 
 - [ ] **Krok 4 — Verifikace**
@@ -66,7 +73,8 @@ Použij když máš workspace, který už existuje, ale chceš ho převést na t
 
 ### Fáze 4 — Automatizace
 
-- [ ] Vytvoř `.claude/commands/sync-docs.md` z templates
+- [ ] Zaveď `.agents/` vrstvu + tenké wrappery (viz Krok 3 v greenfield checklistu)
+- [ ] Pokud `.claude/`/`.cursor/` obsahují plný obsah (ne wrappery) → konsoliduj do `.agents/` a nahraď pointery
 - [ ] Spusť `/sync-docs` — vyřeš všechny warnings
 - [ ] Domluv s týmem, že před každým „hotovo" se spustí `/sync-docs`
 

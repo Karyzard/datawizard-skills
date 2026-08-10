@@ -15,20 +15,22 @@ Workspace pro práci s konkrétním klientem (konzultace, dlouhodobá spoluprác
 
 **Vždy:**
 - `00-inbox/`
-- `01-communications/` — schůzky, mail, sw releases
-- `02-project-mgmt/` — timeline, RACI, MoSCoW, risks
-- `04-deliverables/` — nabídky, specs, reporty
+- `01-communications/` — podsložky `01-meetings/`, `02-messages/`, `03-summaries/`
+- `02-project-mgmt/` — `ROADMAP.md`, `packages/` (lifecycle 10-draft → 40-done), `nabidky/` (NAB-NNN) + `nabidky.md`, `templates/`
+- `03-context/` — persona klienta, brief, klientovo prostředí a systémy
+- `04-deliverables/` — finální výstupy pro klienta (bez `*-INTERNI-*` souborů)
 - `99-archive/`
 
 **Doporučené:**
-- `03-context/` — pokud má klient dlouhodobý produktový kontext
 - `70-research/` — pokud děláš pro klienta výzkum
+- `10+` — dedikované fáze/výstupy projektu (číslované od 10 výš)
 
 **Root soubory:**
-- `README.md` (povinné)
-- `AGENTS.md` (povinné)
+- `README.md`, `AGENTS.md`, `CLAUDE.md` (povinné)
+- `00-kickoff.md` — seed formulář (vyplnit s klientem, pak naseed-ovat workspace)
 - `ONBOARDING.md` (pokud na klientovi pracuje 2+ lidí)
 - `TODO.md`
+- `agent.local.md.example` + config soubory (`.gitignore`, `.gitattributes`, `.editorconfig`)
 
 ### 2. App / produkt (`app`)
 
@@ -73,9 +75,11 @@ Workspace pro konkrétní projekt s jasným začátkem a koncem (např. migrace,
 
 **Root soubory:**
 - `README.md` (povinné)
-- `AGENTS.md` (povinné, pokud používáš AI)
+- `AGENTS.md` + `CLAUDE.md` (povinné, pokud používáš AI)
+- `00-kickoff.md` (pokud je projekt pro klienta)
 - `TODO.md`
 - `ONBOARDING.md` (pokud projekt > 1 osoba)
+- `agent.local.md.example` + config soubory (`.gitignore`, `.gitattributes`, `.editorconfig`)
 
 ### 4. Docs vault (`docs-vault`)
 
@@ -101,7 +105,14 @@ Skill `workspace-docs-setup` se zeptá:
 2. **Jméno workspace** → použije se v root souborech
 3. **Tým** → solo / 2+ lidí (rozhoduje o ONBOARDING.md)
 4. **Jazyk obsahu** → cs / en
-5. **Volitelné složky** → list doporučených, uživatel vybere
+5. **Git repo?** → ano/ne (rozhoduje o git workflow sekci v AGENTS.md a config souborech)
+6. **Volitelné složky** → list doporučených, uživatel vybere
+
+## Průřezové konvence (všechny typy)
+
+- **`*-INTERNI-*` soubory** — interní ceny, marže, strategie. Nikdy nesdílet s klientem, nikdy nekopírovat do deliverables; z ostatních dokumentů jen odkazovat.
+- **Cross-platform** — LF konce řádků, žádné symlinky, žádné bash-only skripty, Windows-safe názvy souborů.
+- **`.agents/` vrstva** — kanonický zdroj AI artefaktů + tenké wrappery per nástroj (viz `templates/dotfolders/`).
 
 ## Rozhodovací strom: Aplikovat standard?
 

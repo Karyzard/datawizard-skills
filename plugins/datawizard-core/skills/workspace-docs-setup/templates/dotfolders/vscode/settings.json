@@ -1,0 +1,26 @@
+{
+  // Workspace nastavení pro VS Code (docs workflow + Copilot, cross-platform).
+  // Lokální override patří do *.local.json (viz .gitignore).
+
+  // --- Cross-platform parita (Windows + macOS) ---
+  "files.eol": "\n",
+  "files.encoding": "utf8",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+
+  // Markdown: zachovat trailing whitespace (hard line breaks)
+  "[markdown]": {
+    "files.trimTrailingWhitespace": false
+  },
+
+  // --- GitHub Copilot: čti AGENTS.md jako instrukce ---
+  "chat.useAgentsMdFile": true,
+  "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+
+  // --- Drobnosti pro psaní dokumentace ---
+  "editor.wordWrap": "on",
+  "search.exclude": {
+    "**/.specstory": true,
+    "output/**": true
+  }
+}

@@ -1,0 +1,10 @@
+{
+  // Doporučená rozšíření pro tento workspace.
+  // Zdroj pravdy / odůvodnění: .agents/plugins.md
+  "recommendations": [
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+    "DavidAnson.vscode-markdownlint",
+    "EditorConfig.EditorConfig"
+  ]
+}

@@ -1,0 +1,42 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Logs
+*.log
+*.log.*
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Node (pro jistotu, pokud by se přidaly skripty)
+node_modules/
+
+# VS Code — lokální nastavení (nesdílet)
+.vscode/*.local.json
+
+# Dočasné soubory
+*.tmp
+*.bak
+*.swp
+*~
+
+# Internal documentation (not for repo)
+docs-internal.html
+
+# Generated HTML build output (md-to-html skill) — regenerable, not tracked
+output/
+
+# User-specific local agent config (each user maintains their own)
+agent.local.md
+
+# Local Netlify folder
+.netlify

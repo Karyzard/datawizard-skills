@@ -4,7 +4,7 @@
 >
 > **Kdy použít:** Při zakládání nového workspace, při onboardingu nového člena týmu, nebo když si všimneš, že stávající dokumentace je zastaralá / nekonzistentní.
 >
-> **Šablony:** [`~/.claude/templates/workspace-docs/`](../templates/workspace-docs/)
+> **Šablony:** [`../templates/`](../templates/) (součást skillu `workspace-docs-setup`)
 
 ---
 
@@ -16,19 +16,25 @@ Dokumentace má **tři vrstvy**, každá s jasnou rolí:
 ┌─────────────────────────────────────────────────────────────┐
 │ ROOT (globální orientace)                                   │
 │   README.md          → co to je, aktuální stav, struktura   │
-│   AGENTS.md          → routing tabulka pro AI agenty        │
+│   AGENTS.md          → KANONICKÉ rules + routing pro agenty │
+│   CLAUDE.md          → tenký ukazatel (@AGENTS.md import)   │
+│   00-kickoff.md      → seed formulář (klientský projekt)    │
 │   ONBOARDING.md      → checklist pro nové členy týmu        │
-│   DEVELOPMENT-PROCESS.md (volitelné) → role, sprinty, eska. │
 │   TODO.md, IDEAS.md  → operativa                            │
+│   agent.local.md     → per-uživatel config (gitignorovaný)  │
 ├─────────────────────────────────────────────────────────────┤
 │ FOLDER LEVEL (detail jednotlivých složek)                   │
 │   <folder>/CONTEXT.md → rozcestník: účel, podsložky, čtení  │
 ├─────────────────────────────────────────────────────────────┤
-│ AUTOMATION (samoudržitelnost)                               │
-│   .claude/templates/CONTEXT.md → šablona pro nové složky    │
-│   .claude/commands/sync-docs.md → kontrola konzistence      │
+│ AUTOMATION (samoudržitelnost, nástrojová nezávislost)       │
+│   .agents/           → KANONICKÝ zdroj AI artefaktů         │
+│     commands/, skills/, templates/CONTEXT.md, plugins.md    │
+│   .claude/, .cursor/, .github/, .vscode/ → tenké wrappery   │
+│   /sync-docs         → kontrola konzistence (skill+command) │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+**Nástrojová nezávislost:** `AGENTS.md` je kanonický zdroj instrukcí; `CLAUDE.md` (Claude Code), `.cursor/rules/000-agents.mdc` (Cursor) a `.github/copilot-instructions.md` (Copilot) jsou tenké wrappery, které na něj odkazují. AI artefakty (commands, skills) žijí jednou v `.agents/`, nástroje na ně jen odkazují — žádné duplicity, žádné symlinky (cross-platform Windows + macOS).
 
 **Klíčové pravidlo dělby práce:**
 
@@ -56,20 +62,24 @@ Pokud workspace nesplňuje, stačí jednoduchý `README.md`.
 
 ### Krok 1 — Root soubory
 
-Z `~/.claude/templates/workspace-docs/` zkopíruj a vyplň:
+Ze šablon skillu (`templates/`) zkopíruj a vyplň:
 
 | Soubor | Povinný? | Účel |
 |---|---|---|
 | `README.md` | ✓ | Přehled pro lidi — co to je, aktuální stav, struktura, tech stack |
-| `AGENTS.md` | ✓ (pokud používáš AI) | Routing pro AI agenty — mapa složek, routovací tabulka |
+| `AGENTS.md` | ✓ (pokud používáš AI) | Kanonické rules + routing — mapa složek, pravidla, git workflow |
+| `CLAUDE.md` | ✓ (pokud používáš AI) | Tenký ukazatel `@AGENTS.md` pro Claude Code |
+| `00-kickoff.md` | ◯ (klientský projekt) | Seed formulář — vyplnit s klientem, pak naseed-ovat workspace |
 | `ONBOARDING.md` | ✓ (víceosobní team) | Checklist pro první týden v týmu |
+| `agent.local.md.example` | ◯ (git repo) | Šablona per-uživatel konfigurace (gitignorovaná kopie) |
+| `.gitignore`, `.gitattributes`, `.editorconfig` | ◯ (git repo) | Cross-platform základ (LF, ignore pravidla) — z `templates/config/` |
 | `DEVELOPMENT-PROCESS.md` | ◯ (vývojové projekty) | Role, sprint cyklus, eskalace |
 | `TODO.md` | ◯ | Operativní úkoly |
 | `IDEAS.md` | ◯ | Funnel nápadů |
 
 ### Krok 2 — `CONTEXT.md` v každé top-level složce
 
-Pro každou top-level složku (`0X-`, `1X-`, atd.) vytvoř `CONTEXT.md` z šablony [`~/.claude/templates/workspace-docs/CONTEXT.md`](../templates/workspace-docs/CONTEXT.md).
+Pro každou top-level složku (`0X-`, `1X-`, atd.) vytvoř `CONTEXT.md` z šablony [`../templates/CONTEXT.md`](../templates/CONTEXT.md) (per-složka stuby v [`../templates/folder-stubs/`](../templates/folder-stubs/)).
 
 Minimum sekcí v CONTEXT.md:
 
@@ -82,18 +92,28 @@ Minimum sekcí v CONTEXT.md:
 7. **Naming konvence**
 8. **Související** (cross-linky)
 
-### Krok 3 — Automatizace (`.claude/`)
+### Krok 3 — Automatizace (`.agents/` + tenké wrappery)
 
-V workspace vytvoř:
+Kanonický zdroj AI artefaktů je `.agents/`; jednotlivé nástroje dostávají jen tenké wrappery. Ze šablon skillu (`templates/dotfolders/`) vytvoř:
 
 ```
-.claude/
-  templates/
-    CONTEXT.md         ← kopie z ~/.claude/templates/workspace-docs/CONTEXT.md
-  commands/
-    sync-docs.md       ← kopie z ~/.claude/templates/workspace-docs/sync-docs.md
-  settings.local.json  ← lokální permissions (volitelné)
+.agents/                          ← KANONICKÝ ZDROJ (edituje se jen tady)
+  README.md                       ← definice systému + governance
+  plugins.md                      ← registr doporučených rozšíření
+  commands/sync-docs.md           ← tenký spouštěč
+  skills/sync-docs/SKILL.md       ← znalost (6 kontrol + report)
+  templates/CONTEXT.md            ← šablona pro nové složky
+.claude/                          ← wrapper pro Claude Code
+  commands/sync-docs.md, skills/sync-docs/SKILL.md (pointery)
+.cursor/                          ← wrapper pro Cursor
+  rules/000-agents.mdc (alwaysApply → AGENTS.md), commands/sync-docs.md
+.github/                          ← wrapper pro VS Code + Copilot
+  copilot-instructions.md, prompts/sync-docs.prompt.md
+.vscode/
+  extensions.json, settings.json  ← doporučení + cross-platform nastavení
 ```
+
+> **Volitelné pokročilé vzory** (negenerují se automaticky, viz reálné projekty): `.internal/build.js` — Node HTML build dokumentace; `output/` — gitignorovaný build adresář HTML exportů (agent ho nečte proaktivně); `_export-*/` — staging pro redakci citlivých dat před sdílením do externího repa.
 
 ### Krok 4 — Onboard tým
 
@@ -171,7 +191,7 @@ Když uživatel řekne „jsem hotový" nebo `/sync-docs`, spusť kontrolu:
 - Není někde zastaralý název složky?
 - Jsou datumy aktuální?
 
-Šablona příkazu: [`~/.claude/templates/workspace-docs/sync-docs.md`](../templates/workspace-docs/sync-docs.md)
+Šablona: [`../templates/dotfolders/agents/skills/sync-docs/SKILL.md`](../templates/dotfolders/agents/skills/sync-docs/SKILL.md)
 
 ---
 
@@ -201,7 +221,7 @@ Když uživatel řekne „jsem hotový" nebo `/sync-docs`, spusť kontrolu:
 
 ## Reference
 
-- Šablony: [`~/.claude/templates/workspace-docs/`](../templates/workspace-docs/)
-- Globální boundaries: [`~/.claude/rules/boundaries.md`](boundaries.md)
-- Naming pravidla: [`~/.claude/rules/naming.md`](naming.md)
-- Příklad implementace: `~/Library/CloudStorage/OneDrive-.../2026-feos-apps/`
+- Šablony: [`../templates/`](../templates/)
+- Globální boundaries: `~/.claude/rules/boundaries.md`
+- Naming pravidla: [`naming.md`](naming.md)
+- Příklady implementace: `.../01_Projekty/2026-pavel-prachar/` a `.../01_Projekty/2026-med-company-hub-mentoring/`

@@ -1,44 +1,54 @@
-# Workspace Docs Templates
+---
+title: {{ Workspace Name }} — přehled
+date: YYYY-MM-DD
+status: active
+client: {{ Klient / — }}
+company: datawizard
+phase: {{ offer-preparation / realizace / ... }}
+---
 
-Šablony pro standard dokumentace workspace (klient, projekt, app).
+# {{ Workspace Name }}
 
-> **Reference / instrukce:** [`~/.claude/rules/workspace-docs-system.md`](../../rules/workspace-docs-system.md)
+## O čem to je
 
-## Co je v této složce
+{{ 2–4 věty: co je tento workspace, pro koho, jaký artefakt produkuje. U klienta: kdo je klient, co dodáváme, jaký je model spolupráce. }}
 
-| Soubor | Kam zkopírovat | Účel |
+## Aktuální stav ({{ YYYY-MM-DD }})
+
+| Fáze | Stav |
+|---|---|
+| {{ První kontakt }} | {{ ✅ / 🔄 / 🔜 / — }} |
+| {{ Nabídka }} | {{ }} |
+| {{ Realizace }} | {{ }} |
+
+**Další kroky:**
+
+- [ ] {{ krok 1 }}
+- [ ] {{ krok 2 }}
+
+## Struktura složky
+
+Každá top-level složka má `CONTEXT.md` jako rozcestník — detail hledej tam.
+
+| Složka | Obsah |
+|---|---|
+| [`00-inbox/`](00-inbox/CONTEXT.md) | Staging neroztříděných materiálů |
+| [`01-{{ ... }}/`](01-{{ ... }}/CONTEXT.md) | {{ popis }} |
+| {{ atd. }} | ... |
+| [`99-archive/`](99-archive/CONTEXT.md) | Read-only archiv |
+
+## AI nástroje
+
+Workspace je nástrojově nezávislý — funguje stejně v Claude Code, Cursoru i VS Code + Copilot. Kanonické instrukce pro agenty jsou v [`AGENTS.md`](AGENTS.md), systém AI artefaktů popisuje [`.agents/README.md`](.agents/README.md).
+
+## Tým
+
+| Osoba | Role | Komunikuje přes |
 |---|---|---|
-| `README.md` | `<workspace>/README.md` | Přehled workspace pro lidi |
-| `AGENTS.md` | `<workspace>/AGENTS.md` | Routing tabulka pro AI agenty |
-| `ONBOARDING.md` | `<workspace>/ONBOARDING.md` | Checklist pro nové členy týmu |
-| `CONTEXT.md` | `<workspace>/<složka>/CONTEXT.md` + `<workspace>/.claude/templates/CONTEXT.md` | Rozcestník složky |
-| `sync-docs.md` | `<workspace>/.claude/commands/sync-docs.md` | Slash command pro kontrolu konzistence |
-| `setup-checklist.md` | (čti, neexportuj) | Krok za krokem postup setup nového workspace |
+| {{ Jméno }} | {{ Role }} | {{ Kanál }} |
 
-## Použití
+## Jak začít
 
-### Nový workspace
-
-```bash
-# 1. Vytvoř workspace
-mkdir -p ~/Documents/_KLIENTI/novy-klient
-cd ~/Documents/_KLIENTI/novy-klient
-
-# 2. Zkopíruj root templates
-cp ~/.claude/templates/workspace-docs/README.md .
-cp ~/.claude/templates/workspace-docs/AGENTS.md .
-cp ~/.claude/templates/workspace-docs/ONBOARDING.md .
-
-# 3. Setup .claude/
-mkdir -p .claude/templates .claude/commands
-cp ~/.claude/templates/workspace-docs/CONTEXT.md .claude/templates/
-cp ~/.claude/templates/workspace-docs/sync-docs.md .claude/commands/
-
-# 4. Vyplň placeholdery v root souborech (vyhledej {{ ... }})
-
-# 5. Vytvoř první top-level složky a do každé CONTEXT.md
-```
-
-### Existující workspace (retrofit)
-
-Postupuj podle [`setup-checklist.md`](setup-checklist.md).
+1. Nový člověk v týmu → [`ONBOARDING.md`](ONBOARDING.md)
+2. Nový engagement → vyplň [`00-kickoff.md`](00-kickoff.md) s klientem a nech agenta naseed-ovat workspace
+3. Operativa → [`TODO.md`](TODO.md)

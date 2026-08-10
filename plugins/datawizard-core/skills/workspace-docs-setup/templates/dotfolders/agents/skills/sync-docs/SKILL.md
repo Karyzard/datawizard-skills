@@ -1,8 +1,9 @@
 ---
-description: Zkontroluje konzistenci dokumentace workspace (AGENTS.md, README.md, CONTEXT.md, ONBOARDING.md) po změnách struktury složek
+name: sync-docs
+description: Zkontroluje a srovná konzistenci dokumentace workspace (AGENTS.md, README.md, CONTEXT.md, ONBOARDING.md) po změnách struktury složek. Použij, když uživatel řekne „jsem hotový", spustí /sync-docs, nebo po jakékoli změně top-level struktury.
 ---
 
-# /sync-docs — Kontrola konzistence dokumentace
+# sync-docs — kontrola konzistence dokumentace
 
 Spusť tuto kontrolu, když uživatel řekne „jsem hotový", „/sync-docs" nebo po jakékoli změně top-level struktury workspace.
 
@@ -10,7 +11,7 @@ Spusť tuto kontrolu, když uživatel řekne „jsem hotový", „/sync-docs" ne
 
 ### 1. Existující top-level složky vs. AGENTS.md routing tabulka
 
-Vylistuj všechny top-level složky (číslované `0X-`, `1X-`, `7X-`, `9X-` + nečíslované jako `docs/`, `scripts/`).
+Vylistuj všechny top-level složky (číslované `0X-`, `1X-`, `7X-`, `9X-` + nečíslované jako `docs/`, `scripts/`). Tooling dot-složky (`.agents/`, `.claude/`, `.cursor/`, `.github/`, `.vscode/`) do mapy nepatří.
 
 Porovnej s mapou složek v `AGENTS.md` sekce „Mapa složek (top-level)":
 
@@ -22,7 +23,7 @@ Porovnej s mapou složek v `AGENTS.md` sekce „Mapa složek (top-level)":
 Pro každou top-level složku ověř, že existuje `<složka>/CONTEXT.md`.
 
 Pokud **chybí**:
-- Vytvoř ho podle šablony `.claude/templates/CONTEXT.md`
+- Vytvoř ho podle šablony `.agents/templates/CONTEXT.md`
 - Vyplň minimálně sekce: K čemu složka slouží, Podsložky, Související
 - Ohlas uživateli, že byl vytvořen draft, ať ho zreviduje
 
@@ -84,5 +85,5 @@ Po kontrole vypiš stručný report:
 
 ## Reference
 
-- Workspace docs standard: [`~/.claude/rules/workspace-docs-system.md`](~/.claude/rules/workspace-docs-system.md)
-- Šablony: [`~/.claude/templates/workspace-docs/`](~/.claude/templates/workspace-docs/)
+- Kanonické rules + routing: [`../../../AGENTS.md`](../../../AGENTS.md)
+- Šablona CONTEXT.md: [`../../templates/CONTEXT.md`](../../templates/CONTEXT.md)

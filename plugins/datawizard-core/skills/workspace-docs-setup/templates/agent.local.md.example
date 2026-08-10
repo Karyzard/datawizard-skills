@@ -1,0 +1,34 @@
+---
+title: agent.local.md — uživatelsky specifická konfigurace agenta
+status: template
+---
+
+# agent.local.md — lokální konfigurace
+
+> **Tento soubor je gitignorovaný.** Každý uživatel si ho vytváří lokálně zkopírováním této šablony (`agent.local.md.example → agent.local.md`) a vyplněním vlastních hodnot.
+>
+> Sem patří věci, které jsou **specifické pro tvůj počítač nebo účet** — nikoli projektová pravidla (ta jsou v `AGENTS.md`).
+
+## GitHub CLI (`gh`)
+
+- **Cesta:** `which gh` → např. `/opt/homebrew/bin/gh` (macOS Homebrew) nebo `/usr/bin/gh`
+- **Přihlášený účet:** `gh auth status` → např. `{{ github-ucet }}`
+- **Token scopes:** `repo`, `workflow`, `gist`, `read:org`
+- **Poznámka:** Pokud `gh` není k dispozici, PR otevři ručně přes URL z výstupu `git push`.
+
+## Git remote
+
+- **Remote `origin`:** `{{ https://github.com/... }}`
+
+## Node.js
+
+- **Dostupnost:** ověř `which node`
+- **Verze:** `node --version`
+
+## Interní reference (nepublikovat)
+
+- **Cesta k interním podkladům (OneDrive apod.):** {{ doplnit }}
+
+## Další lokální nastavení
+
+<!-- Doplň cokoliv dalšího specifického pro tvůj setup — cesty k nástrojům, lokální aliasy, apod. -->

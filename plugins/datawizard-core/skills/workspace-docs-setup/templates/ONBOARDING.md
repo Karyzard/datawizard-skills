@@ -27,6 +27,13 @@ status: active
 | {{ Jméno }} | {{ Role }} | {{ Kanál }} |
 | ... | ... | ... |
 
+<!-- SECTION: druha-osoba-v-tymu -->
+### Tvůj scope (druhá osoba v týmu)
+
+{{ Vyplní seed z 00-kickoff.md sekce 6.2 — pokud v týmu není druhá osoba, obsah této sekce se maže, HTML komentáře zůstávají jako kotvy pro re-seed. }}
+<!-- /SECTION -->
+
+
 ### Akce na konci dne 1
 
 - [ ] Přidán do komunikačních kanálů (Slack / e-mail / WhatsApp)
@@ -110,6 +117,7 @@ date: YYYY-MM-DD
 - {{ Workspace-specific NO-NO 2 }}
 - Diakritika v názvech souborů
 - Editace `99-archive/` bez souhlasu
+- Sdílení souborů `*-INTERNI-*` (ceny, marže, strategie) s klientem — nikdy, v žádné podobě
 
 ---
 
@@ -126,8 +134,10 @@ date: YYYY-MM-DD
 
 ## AI agenti v projektu
 
-Pokud pracuješ s AI agentem (Claude Code, Cursor):
+Workspace je nástrojově nezávislý — funguje v Claude Code, Cursoru i VS Code + Copilot:
 
-1. Agent zná routing — instrukce v [`AGENTS.md`](AGENTS.md) a v `CONTEXT.md` každé složky
-2. Pro update dokumentace použij slash command `/sync-docs`
-3. Když agent dává nesmyslné výstupy → pravděpodobně je nějaký `CONTEXT.md` zastaralý. Nahlásit {{ Primary contact }}.
+1. Agent zná routing — kanonické instrukce v [`AGENTS.md`](AGENTS.md) a v `CONTEXT.md` každé složky
+2. AI artefakty (commands, skills) žijí v [`.agents/`](.agents/README.md); soubory v `.claude/`, `.cursor/`, `.github/` jsou jen tenké wrappery
+3. Pro update dokumentace použij slash command `/sync-docs`
+4. Uživatelsky specifickou konfiguraci (cesty, účty) si vyplň do `agent.local.md` (zkopíruj z `agent.local.md.example`)
+5. Když agent dává nesmyslné výstupy → pravděpodobně je nějaký `CONTEXT.md` zastaralý. Nahlásit {{ Primary contact }}.
