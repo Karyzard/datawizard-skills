@@ -78,6 +78,14 @@
       "author": { "name": "Karel Simek" },
       "source": "./plugins/web-motion",
       "category": "development"
+    },
+    {
+      "name": "writing-style",
+      "description": "Write in Karel's voice across channels (LinkedIn, e-mail, messages, offers) and check any Czech text for AI signatures (dashes, fragments, forbidden phrases).",
+      "version": "0.1.0",
+      "author": { "name": "Karel Simek" },
+      "source": "./plugins/writing-style",
+      "category": "productivity"
     }
   ]
 }

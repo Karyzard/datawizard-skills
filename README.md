@@ -22,6 +22,7 @@ Repo: [github.com/Karyzard/datawizard-skills](https://github.com/Karyzard/datawi
 | [wiki-tools](plugins/wiki-tools/) | Markdown wiki — ingest, lint, query |
 | [web-conversion](plugins/web-conversion/) | Konverze web prototypů do produkčních stacků, scaffolding z šablon |
 | [web-motion](plugins/web-motion/) | Animovaná demo okna (terminál, IDE, blueprint, CRT) + hook-switcher pro hero copy |
+| [writing-style](plugins/writing-style/) | Psaní Karlovým hlasem (LinkedIn, e-mail, zprávy, nabídky) + kontrola textu na AI signatury |
 
 ## Instalace pro Claude Code
 
@@ -47,6 +48,7 @@ Po úspěchu uvidíš: `Successfully added marketplace: datawizard-skills`
 /plugin install wiki-tools@datawizard-skills
 /plugin install web-conversion@datawizard-skills
 /plugin install web-motion@datawizard-skills
+/plugin install writing-style@datawizard-skills
 ```
 
 Nainstaluj jen ty, které potřebuješ.
