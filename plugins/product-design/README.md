@@ -14,6 +14,7 @@ Complete product design and prototyping pipeline — from raw idea to clickable 
 - **wireframe-designer** — Create ASCII wireframes from user flows
 - **html-prototyper** — Transform wireframes into complete, clickable HTML prototypes
 - **branding-creator** — Systematic branding process — slogan, logo concepts, color palette
+- **etymo-naming** — Brand/product name candidates from etymological roots (Greek, Latin, Norse, Polynesian…) plus derived neologisms, with a domain/trademark availability checklist
 - **backlog-builder** — Build structured product backlog using Boulders-Rocks-Gravel methodology
 - **business-case** — Create a PRINCE2-style business case for a project or product
 - **implementation-spec** — Create complete technical specification for AI coders
