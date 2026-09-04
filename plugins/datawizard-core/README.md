@@ -12,7 +12,8 @@ Session management workflow for the OS Datawizard markdown vault system.
 - **start** — Begin a new work session, write pointer file with window name + start time
 - **wrap** — Close session, append summary log to today's session file, prepare for `/clear`
 - **ship** — Commit all changes and push to GitHub
-- **workspace-docs-setup** — Set up or audit a workspace documentation system (root files, 00–99 folder structure, CONTEXT.md per folder, /sync-docs slash command). Auto-detects SETUP vs AUDIT mode.
+
+Project repos (`project-*`) are covered by the `project-os` plugin (2026-09-04); the former `workspace-docs-setup` skill was removed.
 
 ## Rules
 

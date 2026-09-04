@@ -178,7 +178,7 @@ plugins/datawizard-core/skills/workspace-docs-setup/
 
 Už mám v `~/.claude/templates/workspace-docs/` šablony a v `~/.claude/rules/workspace-docs-system.md` master instrukci. Skill je převezme:
 
-- [ ] Přesunout šablony z `~/.claude/templates/workspace-docs/` → `plugins/datawizard-core/skills/workspace-docs-setup/templates/`
+- [x] Přesunout šablony z `~/.claude/templates/workspace-docs/` → `plugins/datawizard-core/skills/workspace-docs-setup/templates/` — 2026-09-04: skill `workspace-docs-setup` odstraněn, projektová repa řeší plugin `project-os`
 - [ ] Master instrukci z `~/.claude/rules/workspace-docs-system.md` → integrovat do `SKILL.md` + případně `references/workspace-docs-system.md`
 - [ ] Smazat staré lokace po ověření, že skill funguje
 

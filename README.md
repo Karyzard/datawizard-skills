@@ -14,6 +14,7 @@ Repo: [github.com/Karyzard/datawizard-skills](https://github.com/Karyzard/datawi
 | Plugin | Účel |
 |---|---|
 | [datawizard-core](plugins/datawizard-core/) | Session workflow (`start`, `wrap`, `ship`) + globální pravidla |
+| [project-os](plugins/project-os/) | Standard projektových rep `project-*`: metodika, založení, migrace, delivery itemy, audit; šablona repa uvnitř |
 | [content-tools](plugins/content-tools/) | Konverze dokumentů (email, PDF, přepisy schůzek) a generování obrázků |
 | [client-delivery](plugins/client-delivery/) | Klientská práce — discovery, advisory persony |
 | [product-design](plugins/product-design/) | Design Thinking pipeline, prototyping, UI/UX intelligence |
@@ -40,6 +41,7 @@ Po úspěchu uvidíš: `Successfully added marketplace: datawizard-skills`
 
 ```
 /plugin install datawizard-core@datawizard-skills
+/plugin install project-os@datawizard-skills
 /plugin install content-tools@datawizard-skills
 /plugin install client-delivery@datawizard-skills
 /plugin install product-design@datawizard-skills

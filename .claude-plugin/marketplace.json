@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "datawizard-skills",
-  "description": "Thematic skill plugins for the OS Datawizard system — session management, content tools, client delivery, product design, business advice, talent coaching, and wiki tools.",
+  "description": "Thematic skill plugins for the OS Datawizard system — session management, project-repo standard, content tools, client delivery, product design, business advice, talent coaching, and wiki tools.",
   "owner": {
     "name": "Karel Simek",
     "email": "datawizard.bi@gmail.com"
@@ -11,15 +11,29 @@
       "name": "datawizard-core",
       "description": "Markdown vault session workflow (start, wrap, ship) and global rules for the OS Datawizard system.",
       "version": "0.1.0",
-      "author": { "name": "Karel Simek" },
+      "author": {
+        "name": "Karel Simek"
+      },
       "source": "./plugins/datawizard-core",
+      "category": "productivity"
+    },
+    {
+      "name": "project-os",
+      "description": "Datawizard project-repo standard as skills — methodology primer (project-standard), new-project, migrate-project, delivery-item, project-audit; template-project v2 bundled.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Karel Simek"
+      },
+      "source": "./plugins/project-os",
       "category": "productivity"
     },
     {
       "name": "content-tools",
       "description": "Document conversion and processing tools — email-to-markdown, pdf-to-markdown, process-meeting-transcript, generate-images.",
       "version": "0.1.0",
-      "author": { "name": "Karel Simek" },
+      "author": {
+        "name": "Karel Simek"
+      },
       "source": "./plugins/content-tools",
       "category": "productivity"
     },
@@ -27,7 +41,9 @@
       "name": "client-delivery",
       "description": "Client work tools — discovery process, advisory personas, project scaffolding.",
       "version": "0.1.0",
-      "author": { "name": "Karel Simek" },
+      "author": {
+        "name": "Karel Simek"
+      },
       "source": "./plugins/client-delivery",
       "category": "productivity"
     },
@@ -35,7 +51,9 @@
       "name": "product-design",
       "description": "Complete product design and prototyping pipeline — Design Thinking process, wireframing, HTML prototyping, branding, backlog building, business cases, and UI/UX intelligence.",
       "version": "0.1.0",
-      "author": { "name": "Karel Simek" },
+      "author": {
+        "name": "Karel Simek"
+      },
       "source": "./plugins/product-design",
       "category": "productivity"
     },
@@ -43,7 +61,9 @@
       "name": "business-advice",
       "description": "Business consultant personas — Hormozi direct-advice style and Inizio (Czech entrepreneur) style.",
       "version": "0.1.0",
-      "author": { "name": "Karel Simek" },
+      "author": {
+        "name": "Karel Simek"
+      },
       "source": "./plugins/business-advice",
       "category": "productivity"
     },
@@ -51,7 +71,9 @@
       "name": "talent-coaching",
       "description": "Kasimaka talent coaching personas — coaching, decision-making, reflection, project review, sales preparation.",
       "version": "0.1.0",
-      "author": { "name": "Karel Simek" },
+      "author": {
+        "name": "Karel Simek"
+      },
       "source": "./plugins/talent-coaching",
       "category": "productivity"
     },
@@ -59,7 +81,9 @@
       "name": "wiki-tools",
       "description": "Markdown wiki tools — ingest new content, lint quality, query knowledge base.",
       "version": "0.1.0",
-      "author": { "name": "Karel Simek" },
+      "author": {
+        "name": "Karel Simek"
+      },
       "source": "./plugins/wiki-tools",
       "category": "productivity"
     },
@@ -67,7 +91,9 @@
       "name": "web-conversion",
       "description": "Plan and execute web project conversions from prototypes (Lovable, etc.) into production-ready stacks, or scaffold new projects from architectural templates.",
       "version": "0.1.0",
-      "author": { "name": "Karel Simek" },
+      "author": {
+        "name": "Karel Simek"
+      },
       "source": "./plugins/web-conversion",
       "category": "development"
     },
@@ -75,7 +101,9 @@
       "name": "web-motion",
       "description": "Animated and interactive web patterns — animated demo windows (terminal typewriter, IDE, blueprint pipeline, CRT boot) and hook-switcher for live hero copy comparison on prototypes.",
       "version": "0.1.0",
-      "author": { "name": "Karel Simek" },
+      "author": {
+        "name": "Karel Simek"
+      },
       "source": "./plugins/web-motion",
       "category": "development"
     },
@@ -83,7 +111,9 @@
       "name": "writing-style",
       "description": "Write in Karel's voice across channels (LinkedIn, e-mail, messages, offers) and check any Czech text for AI signatures (dashes, fragments, forbidden phrases).",
       "version": "0.1.0",
-      "author": { "name": "Karel Simek" },
+      "author": {
+        "name": "Karel Simek"
+      },
       "source": "./plugins/writing-style",
       "category": "productivity"
     }

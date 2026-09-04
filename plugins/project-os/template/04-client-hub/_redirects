@@ -1,0 +1,5 @@
+# Netlify redirects pro klientskou plochu.
+/co-je-noveho    /co-je-noveho.html    301
+/milniky         /milniky.html         301
+/jak-hlasit      /jak-hlasit.html      301
+/*               /index.html           404
