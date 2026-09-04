@@ -5,6 +5,7 @@ slug: <slug>                  # po založení se nemění
 name: <Název projektu>
 client: <slug-klienta>        # složka v datawizard-crm/clients/
 status: active                # active | paused | done | archived
-template_version: 2
+vcs: git                      # git | none (OneDrive projekt bez repa — profil bez gitu, standard 3c)
+template_version: 3
 code_repos: []                # např. DatawizardCZ/app-neco
 assets_vault: ""              # sdílený SharePoint URL, nikdy lokální OneDrive cesta

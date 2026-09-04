@@ -7,6 +7,12 @@ date: 2026-08-25
 
 Formát: `## v<N> — YYYY-MM-DD`, nejnovější nahoře. Breaking změna struktury = nová verze; projekty se povyšují vědomě přes PR.
 
+## v3 — 2026-09-05
+
+Nebreaking. `project.yaml` nese pole `vcs: git | none`. Standard nově platí i pro projektové složky na OneDrive bez gitu (`_DATAWIZARD/05-projects/`, profil bez gitu, standard sekce 3c): stejná struktura a řízení, git pravidla přemapovaná (journal řádek hned místo „ve stejném commitu", přesuny itemů bez commitů, bez větví a PR).
+
+**Upgrade z v2:** doplnit `vcs: git` do `project.yaml`. Nic dalšího se nemění.
+
 ## v2 — 2026-08-25
 
 **Breaking:** `04-client-tasks/` a `05-client-hub/` sloučeny do jedné složky `04-client-hub/` s podsložkou `ukoly/`.

@@ -1,11 +1,13 @@
 ---
 name: project-standard
-description: Use when working inside a Datawizard project repo (~/dev/projects/project-*/, files like project.yaml, DELIVERY.md, JOURNAL.md, 40-delivery/), when starting or founding a new project (client service or core service), or when someone mentions the project standard, template-project, delivery items D00X, journal, decision log, org mirror, or klientská plocha. Also the first step of new-project, migrate-project, delivery-item and project-audit.
+description: Use when working inside a Datawizard project workspace — a git repo (~/dev/projects/project-*/) or an OneDrive project folder (OneDrive-Datawizard/_DATAWIZARD/05-projects/) with files like project.yaml, DELIVERY.md, JOURNAL.md, 40-delivery/ — when starting or founding a new project (client service or core service), or when someone mentions the project standard, template-project, delivery items D00X, journal, decision log, org mirror, klientská plocha, or the no-git profile (vcs: none). Also the first step of new-project, migrate-project, delivery-item and project-audit.
 ---
 
 # Standard projektového repa
 
 Jedno repo na projekt: řízení + znalostní báze + handover týmu. Kód žije v samostatných repech, vazbu drží `project.yaml`. Klient do projektového repa nevidí; vidí jen klientskou plochu (hub repo nebo `04-client-hub/`).
+
+Standard má dva profily podle `vcs` v `project.yaml` (fallback: existuje `.git/`?): **git** (repo v org mirroru) a **bez gitu** (OneDrive složka, viz níže). Struktura a řízení jsou stejné, liší se jen git vrstva.
 
 Závazný text je `references/standard.md` (sekce 3 a 3b metodiky, doslovně). Tenhle soubor je mapa; při nejistotě čti referenci, nedomýšlej.
 
@@ -56,6 +58,18 @@ Smí: pracovat v itemu ve `30-in-progress/`, jehož `owner` je člověk, který 
 - **Git:** `main` vždy platný; větve `feature/D00X-…`, `fix/…`, `agent/D00X-…`; commity česky s prefixem ID nebo oblasti; `--force` do main nikdy. Přesun do `40-done/` a změny pravidel repa vždy přes PR.
 - **Org mirror:** lokálně `~/dev/projects/project-*`, `~/dev/hubs/hub-*`, `~/dev/code/app-*|web-*`, `~/dev/datawizard/datawizard-*`. Jméno složky = jméno repa.
 - **Nic citlivého do gitu:** osobní údaje klientů a binárky patří do assets vaultu (SharePoint URL v `project.yaml`). Git historie je navždy.
+
+## Profil bez gitu (OneDrive projekty)
+
+Projektové složky v `_DATAWIZARD/05-projects/<kategorie>/` drží tentýž standard bez git vrstvy; deklaruje ho `vcs: none` v `project.yaml`. Detail v `references/standard.md` sekce 3c. Struktura, řídicí soubory, lifecycle itemů, matice rolí i append-only pravidla platí beze změny. Mění se jen:
+
+- journal řádek se píše hned po viditelné změně (není commit, ke kterému by se vázal)
+- přesun itemu = přesun složky + journal řádek v jednom kroku
+- větve a PR odpadají; `40-done/`, `AGENTS.md` a `README.md` jen po výslovném souhlasu PO
+- domov je `05-projects/<kategorie>/<nazev>` s datovým prefixem názvu (`2026-08-nazev`), ne org mirror
+- binárky a podklady můžou ležet přímo ve složce (OneDrive je privátní, do žádné git historie nejdou)
+
+Povýšení na git: `git init` + PII scrub + `vcs: git` + přesun do org mirroru jako `project-<slug>`. Struktura už sedí.
 
 ## Údržba
 

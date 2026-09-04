@@ -1,11 +1,13 @@
 ---
 name: delivery-item
-description: Use when creating, taking over, questioning, blocking, handing off or closing a delivery item (D00X) in a project repo's 40-delivery/, when DELIVERY.md or JOURNAL.md must be updated for it, or when the user says "založ item", "delivery item", "převzít D00X", "uzavři D00X", "handover pro dev", "balíček pro Prokopa".
+description: Use when creating, taking over, questioning, blocking, handing off or closing a delivery item (D00X) in a project workspace's 40-delivery/ (git repo or no-git OneDrive project folder), when DELIVERY.md or JOURNAL.md must be updated for it, or when the user says "založ item", "delivery item", "převzít D00X", "uzavři D00X", "handover pro dev", "balíček pro Prokopa".
 ---
 
 # delivery-item
 
 Operace nad `40-delivery/`. Stav itemu = složka, ID = identita. Každá operace mění zároveň soubor itemu, `DELIVERY.md` a `JOURNAL.md`, v jednom commitu.
+
+**Profil bez gitu** (`vcs: none` v `project.yaml`, OneDrive projekt): stejné operace a práva, jen bez git mechaniky — `git mv` je obyčejný přesun, commit/větev/PR odpadá a uzavření (→ `40-done/`) se dělá po výslovném souhlasu PO. Trojice item + DELIVERY.md + JOURNAL.md se pořád mění najednou, v jednom kroku.
 
 **REQUIRED SUB-SKILL:** `project-standard` (lifecycle 3.5, role 3.8). Kostry ber z `templates/` repa (`item-light.md`, `item/`, `handoff.md`), ne z hlavy.
 

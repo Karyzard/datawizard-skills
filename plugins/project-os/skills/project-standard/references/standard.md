@@ -266,3 +266,28 @@ Mapování prefix → větev: `datawizard-*` a `template-*` → `datawizard/`, `
 - Konvence pro tým do `datawizard-os/05-navody/` (součást GitHub workflow návodu).
 - **Migrace u Karla:** dnešní `~/dev/_project-repos/` a org repa roztroušená v `~/dev/_app-projects/` (datawizard-os, datawizard-skills…) se postupně přesunou do větví výše; ne-org a osobní věci v `_app-projects/` zůstávají mimo zrcadlo. `med-elektronik-hub` a `project-med-hub` jsou oba klientské huby MED Elektronik → `hubs/` (viz otevřený bod ke konsolidaci níže).
 
+## 3c. Profil bez gitu (OneDrive projekty)
+
+Stejný standard platí i pro projektové složky, které žijí na OneDrive (`_DATAWIZARD/05-projects/<kategorie>/`) a git repo se u nich nezakládá. Profil deklaruje `project.yaml` polem `vcs: none` (git projekt má `vcs: git`); když pole chybí, rozhoduje přítomnost `.git/`.
+
+Beze změny platí: struktura složek 00–99 s CONTEXT.md v každé top-level složce, čtyři místa řízení (ROADMAP, DELIVERY, JOURNAL, project.yaml), delivery lifecycle (stav = složka, ID `D00X` se nerecykluje, reopen neexistuje), `03-context/` jako jediný zdroj pravdy (odkazuj, nekopíruj), matice rolí 3.8, append-only journal a decision log, `99-archive/` se nemaže.
+
+Přemapovaná pravidla:
+
+| Git pravidlo | Ekvivalent bez gitu |
+|---|---|
+| journal řádek ve stejném commitu | journal řádek hned po viditelné změně; pořád součást definice hotové práce |
+| přesun itemu = samostatný commit pushnutý hned | přesun složky + journal řádek v jednom kroku |
+| větve, PR, merge schvaluje PO | odpadá; přesun do `40-done/` a změny AGENTS.md/README.md jen po výslovném souhlasu PO |
+| `main` je vždy platný stav | složka je vždy platný stav; rozpracované věci žijí v `50-*/` nebo v itemu, ne ve sdílených složkách |
+| commity česky s prefixem ID | odpadá; ID `D00X` se dál nese v názvech souborů a journal řádcích |
+| org mirror `~/dev/projects/project-<slug>` | domov `_DATAWIZARD/05-projects/<kategorie>/<nazev>` |
+| nic citlivého do gitu (historie je navždy) | zmírněno: OneDrive je privátní, binárky a podklady můžou ležet přímo ve složce; při pozdějším povýšení na repo se do gitu neberou |
+
+Doplňující pravidla profilu:
+
+- **Název složky:** zavedená OneDrive konvence s datovým prefixem (`2026-08-nazev`, `2026-Q1-nazev`) zůstává. Prefix `project-` je jen pro git repa.
+- **`04-client-hub/` bez gitu nemá deploy.** Potřeba klientské plochy s deployem je signál povýšit projekt na git repo.
+- Sekce 3.10 (git workflow), 3b (org mirror) a GitHub kroky v 3.12 se na profil nevztahují.
+- **Povýšení na git repo:** struktura už sedí. `git init`, PII scrub podle kázně migrace (founding.md), `vcs: git` v manifestu, přesun/přejmenování na `~/dev/projects/project-<slug>` podle org mirroru, journal řádek o cutoveru. Od té chvíle platí plný standard.
+

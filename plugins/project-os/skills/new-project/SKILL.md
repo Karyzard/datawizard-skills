@@ -1,11 +1,14 @@
 ---
 name: new-project
-description: Use when founding a new Datawizard project repo (project-<slug>) from the standard template, for a client service or a core/internal service, when the user says "založ nový projekt", "nová projektová složka", "new project", "podle standardu", "ze šablony". Not for transferring an existing folder (use migrate-project).
+description: Use when founding a new Datawizard project from the standard template — a git repo (project-<slug>) or a no-git OneDrive project folder in _DATAWIZARD/05-projects/ — for a client service or a core/internal service, when the user says "založ nový projekt", "nová projektová složka", "new project", "podle standardu", "ze šablony". Not for transferring an existing folder (use migrate-project).
 ---
 
 # new-project
 
-Založí `~/dev/projects/project-<slug>` z `../../template/` a naseeduje řídicí soubory. Výsledek je lokální git repo s jedním commitem; GitHub jen na výslovné zadání.
+Založí projekt z `../../template/` a naseeduje řídicí soubory. Dva profily (viz `project-standard`):
+
+- **git** (default): `~/dev/projects/project-<slug>`, výsledek je lokální git repo s jedním commitem; GitHub jen na výslovné zadání.
+- **bez gitu**: složka v OneDrive `_DATAWIZARD/05-projects/<kategorie>/<nazev>` (název s datovým prefixem, např. `2026-09-nazev`), žádný git; `vcs: none` v manifestu.
 
 **REQUIRED SUB-SKILL:** nejdřív `project-standard` (aspoň SKILL.md a `references/founding.md`).
 
@@ -15,7 +18,8 @@ Zjisti z požadavku, chybějící doptej jednou zprávou (ne po jedné):
 
 | Vstup | Default, když neřečeno |
 |---|---|
-| slug (`project-<slug>`) | z názvu, kebab-case bez diakritiky |
+| profil (git / bez gitu) | git; bez gitu když uživatel míří na OneDrive nebo řekne „bez repa" |
+| slug (`project-<slug>`; bez gitu `YYYY-MM-nazev`) | z názvu, kebab-case bez diakritiky |
 | název projektu | podle slugu |
 | klient (slug jako v ostatních repech / CRM) | `datawizard` u core služby |
 | PO | Karel |
@@ -37,6 +41,14 @@ Než cokoli vytvoříš: cílová složka nesmí existovat. Když existuje, zast
 
 GitHub jen když to uživatel řekl: `gh repo create DatawizardCZ/project-<slug> --private --source . --push`, pak `gh repo edit --add-topic client-<slug>`.
 
+## Odchylky profilu bez gitu
+
+1. Cíl je `_DATAWIZARD/05-projects/<kategorie>/<YYYY-MM-nazev>/` (kategorii `interni`/`apps` potvrď s uživatelem).
+2. Krok 6 se nahrazuje: žádné `.gitkeep`, žádný `git init`, žádný commit. Založení = řádek do `JOURNAL.md` s `(agent)`.
+3. `project.yaml`: `vcs: none`.
+4. `AGENTS.md` přizpůsob profilu: sekci „Git workflow" nahraď větou „Projekt bez gitu (`vcs: none`): platí profil bez gitu ze standardu (skill `project-standard`), git pravidla se nepoužívají."; „ve stejném commitu" → „hned po změně"; „jeden commit přímo do main" a „přes PR" → „přesun + journal řádek" a „po výslovném souhlasu PO". Smaž `03-context/way-of-working/git-workflow.md`.
+5. Odstavec o GitHubu neplatí.
+
 ## Co skill nedělá
 
 - Nevymýšlí `project_id`; zůstává `"<doplnit>"`.
@@ -46,9 +58,9 @@ GitHub jen když to uživatel řekl: `gh repo create DatawizardCZ/project-<slug>
 
 ## Kontrola před hlášením hotovo
 
-- [ ] `project.yaml`: slug, client, status, template_version odpovídají
+- [ ] `project.yaml`: slug, client, status, template_version, vcs odpovídají
 - [ ] `README.md` má stavovou tabulku s dnešním datem a sekci Odchylky
 - [ ] `JOURNAL.md` má řádek o založení s `(agent)`
 - [ ] `DELIVERY.md` má sekci `## <PO> (PO)`
 - [ ] žádné `<YYYY-MM-DD>` v řádcích `date:` (`grep -rn '^date: <' .`)
-- [ ] `git log` ukazuje jeden commit, `git status` čistý
+- [ ] git profil: `git log` ukazuje jeden commit, `git status` čistý; bez gitu: žádný `.git/` a journal má řádek o založení
