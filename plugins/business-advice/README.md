@@ -16,5 +16,5 @@ Business consultant personas for strategic advice and direct no-BS recommendatio
 ## Installation
 
 ```bash
-/plugin install file:///Users/karelsimek/Documents/_app-projects/datawizard-skills/plugins/business-advice
+/plugin install business-advice@datawizard-skills
 ```

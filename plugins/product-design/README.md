@@ -31,5 +31,5 @@ Complete product design and prototyping pipeline — from raw idea to clickable 
 ## Installation
 
 ```bash
-/plugin install file:///Users/karelsimek/Documents/_app-projects/datawizard-skills/plugins/product-design
+/plugin install product-design@datawizard-skills
 ```

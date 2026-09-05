@@ -11,12 +11,9 @@ description: >-
   zeptat se). Použij kdykoli uživatel chce zpracovat přepis, hlasovou
   poznámku, přejmenovat transcript, vytáhnout shrnutí ze schůzky, zpracovat
   školení/workshop, nebo cenzurovat off-topic pasáže. Triggeruj na "zpracuj
-  meeting", "zpracuj přepis", "zpracuj transcript", "zpracuj poslední přepis",
-  "zpracuj poslední transcript", "zpracuj z Downloads", "najdi poslední
-  meeting", "přejmenuj meeting", "zpracuj schůzku", "klientský meeting",
-  "osobní poznámka", "hlasová poznámka", "voice memo", "diktát", "zpracuj
-  školení", "workshop přepis", "cenzuruj přepis", "off-topic v přepisu".
-  Komunikuj česky.
+  meeting", "zpracuj přepis", "zpracuj transcript", "najdi poslední meeting",
+  "zpracuj schůzku", "hlasová poznámka", "voice memo", "zpracuj školení",
+  "cenzuruj přepis". Komunikuj česky.
 ---
 
 # Zpracování přepisu meetingu

@@ -254,7 +254,8 @@ def wrap_html(body_html: str) -> str:
 # The signature is NOT typed into the Markdown body — it's rendered here from a
 # reusable sender profile so every mail from a given sender looks identical and
 # a new team member configures their own once. The `signature:` frontmatter
-# field picks the profile (default: datawizard).
+# field picks the profile; without it the profile named "default" is used,
+# which each user keeps in ~/.claude/email-signatures/default.json.
 # ---------------------------------------------------------------------------
 
 # User overrides live outside the plugin so they survive plugin updates.
@@ -275,7 +276,7 @@ def load_sender_profile(name: str) -> dict | None:
 
     Returns the profile dict (fields), {"html": "..."} for raw HTML, or None.
     """
-    name = (name or "datawizard").strip()
+    name = (name or "default").strip()
     for base in (USER_SIGNATURE_DIR, BUNDLED_SIGNATURE_DIR):
         json_path = os.path.join(base, f"{name}.json")
         if os.path.isfile(json_path):
@@ -408,7 +409,15 @@ def main() -> None:
         resolved.append(att)
 
     # Resolve the sender's signature profile (frontmatter `signature:`)
-    profile = load_sender_profile(meta.get("signature", "datawizard"))
+    signature_name = meta.get("signature") or "default"
+    profile = load_sender_profile(signature_name)
+    if profile is None:
+        print(
+            f"Varování: profil podpisu '{signature_name}' nenalezen — email bude bez podpisu.\n"
+            f"Vytvoř si ho: zkopíruj signatures/_template.json ze skillu do "
+            f"~/.claude/email-signatures/{signature_name}.json a vyplň svoje údaje.",
+            file=sys.stderr,
+        )
 
     # --- Plain text output ---
     if args.format == "text":

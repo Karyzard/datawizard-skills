@@ -20,15 +20,14 @@ Health check LLM wiki. Odhalí slabá místa, zastaralé informace a chybějíc�
 
 ## Krok 1 — Identifikuj wiki
 
-Urči které wiki se lint týká. Pokud není specifikováno, lintuj `wiki-os` (`~/Documents/personal-os/wiki-os/`).
+Urči které wiki se lint týká. Aliasy a cesty jsou v `~/.claude/wiki-config.md` (formát viz skill `wiki-ingest`). Pokud není wiki specifikována, použij výchozí wiki z konfigurace; pokud konfigurace neexistuje, zeptej se uživatele na cestu.
 
 ---
 
 ## Krok 2 — Přečti schéma a index
 
-1. Přečti `~/Documents/_wiki-schema/AGENTS.md` — reference pro konvence
-2. Přečti `<wiki-root>/AGENTS.md` — doménové instrukce
-3. Přečti `<wiki-root>/index.md` — kompletní seznam stránek
+1. Přečti `<wiki-root>/AGENTS.md` — konvence a doménové instrukce dané wiki
+2. Přečti `<wiki-root>/index.md` — kompletní seznam stránek
 
 ---
 

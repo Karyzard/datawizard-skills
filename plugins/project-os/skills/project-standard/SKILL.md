@@ -57,6 +57,7 @@ Smí: pracovat v itemu ve `30-in-progress/`, jehož `owner` je člověk, který 
 - **Klientská plocha:** klient s `hub-<klient>` repem má plochu tam a `04-client-hub/` se v projektu nezakládá; klient bez hubu má `04-client-hub/` a vidí jen deploy (`10-open/` se nikdy nedeployuje).
 - **Git:** `main` vždy platný; větve `feature/D00X-…`, `fix/…`, `agent/D00X-…`; commity česky s prefixem ID nebo oblasti; `--force` do main nikdy. Přesun do `40-done/` a změny pravidel repa vždy přes PR.
 - **Org mirror:** lokálně `~/dev/projects/project-*`, `~/dev/hubs/hub-*`, `~/dev/code/app-*|web-*`, `~/dev/datawizard/datawizard-*`. Jméno složky = jméno repa.
+- **První nastavení:** layout `~/dev/` je týmový standard Datawizard. Nový člen týmu si složky vytvoří jednou: `mkdir -p ~/dev/projects ~/dev/hubs ~/dev/code ~/dev/datawizard`.
 - **Nic citlivého do gitu:** osobní údaje klientů a binárky patří do assets vaultu (SharePoint URL v `project.yaml`). Git historie je navždy.
 
 ## Profil bez gitu (OneDrive projekty)

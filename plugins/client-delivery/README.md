@@ -5,12 +5,14 @@ date: 2026-04-28
 
 # client-delivery
 
-Client work tools — discovery process, advisory personas, and project scaffolding.
+Client work tools — discovery process, email preparation, and project scaffolding.
 
 ## Skills
 
 - **client-discovery** — Guides AI through a structured client discovery process — from interviewing domain experts to creating formal process definitions, business analysis, compliance checks, and product design. Includes a 7-phase methodology with laptop handoff protocol and Mermaid diagram conventions.
-- **ivo-cdo-advisor** — Advisor simulating Ivo Krejčí's thinking — CDO of Mattoni 1873. Answers questions about digital transformation strategy, project prioritization, business cases, and organizational change from Ivo's perspective.
+- **send-email** — Prepares an email from a Markdown draft (YAML frontmatter), converts to HTML and opens in Outlook (macOS) or prints plain text. Signatures resolve per person: `~/.claude/email-signatures/` overrides bundled `signatures/` templates.
+
+> `ivo-cdo-advisor` se přesunul do osobního repa `karel-skills` (2026-09-05).
 
 ## Scripts
 
@@ -18,6 +20,6 @@ Client work tools — discovery process, advisory personas, and project scaffold
 
 ## Installation
 
-```bash
-/plugin install file:///Users/karelsimek/Documents/_app-projects/datawizard-skills/plugins/client-delivery
+```
+/plugin install client-delivery@datawizard-skills
 ```

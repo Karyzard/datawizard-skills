@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "datawizard-skills",
-  "description": "Thematic skill plugins for the OS Datawizard system — session management, project-repo standard, content tools, client delivery, product design, business advice, talent coaching, and wiki tools.",
+  "description": "Thematic skill plugins for the OS Datawizard system — project-repo standard, content tools, client delivery, product design, business advice, and wiki tools. Team-shared; personal plugins live in karel-skills.",
   "owner": {
     "name": "Karel Simek",
     "email": "datawizard.bi@gmail.com"
@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "datawizard-core",
-      "description": "Markdown vault session workflow (start, wrap, ship) and global rules for the OS Datawizard system.",
+      "description": "Ship workflow (commit + push) and global rules for the OS Datawizard system.",
       "version": "0.1.0",
       "author": {
         "name": "Karel Simek"
@@ -39,7 +39,7 @@
     },
     {
       "name": "client-delivery",
-      "description": "Client work tools — discovery process, advisory personas, project scaffolding.",
+      "description": "Client work tools — discovery process, email preparation, project scaffolding.",
       "version": "0.1.0",
       "author": {
         "name": "Karel Simek"
@@ -65,16 +65,6 @@
         "name": "Karel Simek"
       },
       "source": "./plugins/business-advice",
-      "category": "productivity"
-    },
-    {
-      "name": "talent-coaching",
-      "description": "Kasimaka talent coaching personas — coaching, decision-making, reflection, project review, sales preparation.",
-      "version": "0.1.0",
-      "author": {
-        "name": "Karel Simek"
-      },
-      "source": "./plugins/talent-coaching",
       "category": "productivity"
     },
     {
@@ -106,16 +96,6 @@
       },
       "source": "./plugins/web-motion",
       "category": "development"
-    },
-    {
-      "name": "writing-style",
-      "description": "Write in Karel's voice across channels (LinkedIn, e-mail, messages, offers) and check any Czech text for AI signatures (dashes, fragments, forbidden phrases).",
-      "version": "0.1.0",
-      "author": {
-        "name": "Karel Simek"
-      },
-      "source": "./plugins/writing-style",
-      "category": "productivity"
     },
     {
       "name": "knowledge-capture",

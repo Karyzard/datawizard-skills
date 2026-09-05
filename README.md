@@ -13,18 +13,18 @@ Repo: [github.com/Karyzard/datawizard-skills](https://github.com/Karyzard/datawi
 
 | Plugin | Účel |
 |---|---|
-| [datawizard-core](plugins/datawizard-core/) | Session workflow (`start`, `wrap`, `ship`) + globální pravidla |
+| [datawizard-core](plugins/datawizard-core/) | Workflow `ship` (commit + push) + globální pravidla |
 | [project-os](plugins/project-os/) | Standard projektových rep `project-*`: metodika, založení, migrace, delivery itemy, audit; šablona repa uvnitř |
 | [content-tools](plugins/content-tools/) | Konverze dokumentů (email, PDF, přepisy schůzek) a generování obrázků |
-| [client-delivery](plugins/client-delivery/) | Klientská práce — discovery, advisory persony |
+| [client-delivery](plugins/client-delivery/) | Klientská práce — discovery, příprava emailů, scaffolding |
 | [product-design](plugins/product-design/) | Design Thinking pipeline, prototyping, UI/UX intelligence |
 | [business-advice](plugins/business-advice/) | Konzultantské persony (Hormozi, Inizio) |
-| [talent-coaching](plugins/talent-coaching/) | Kasimaka talent koučovací persony |
 | [wiki-tools](plugins/wiki-tools/) | Markdown wiki — ingest, lint, query |
 | [web-conversion](plugins/web-conversion/) | Konverze web prototypů do produkčních stacků, scaffolding z šablon |
 | [web-motion](plugins/web-motion/) | Animovaná demo okna (terminál, IDE, blueprint, CRT) + hook-switcher pro hero copy |
-| [writing-style](plugins/writing-style/) | Psaní Karlovým hlasem (LinkedIn, e-mail, zprávy, nabídky) + kontrola textu na AI signatury |
 | [knowledge-capture](plugins/knowledge-capture/) | Sběr znalostí z externích zdrojů — přepisy YouTube playlistů/kanálů, průvodce web research nástroji (zdarma vs. placené) |
+
+> Osobní pluginy (talent-coaching, writing-style, start/wrap session workflow, ivo-cdo-advisor) se přesunuly do samostatného repa `karel-skills` (2026-09-05). Tohle repo obsahuje jen skilly použitelné kýmkoliv z Datawizardu.
 
 ## Instalace pro Claude Code
 
@@ -47,11 +47,9 @@ Po úspěchu uvidíš: `Successfully added marketplace: datawizard-skills`
 /plugin install client-delivery@datawizard-skills
 /plugin install product-design@datawizard-skills
 /plugin install business-advice@datawizard-skills
-/plugin install talent-coaching@datawizard-skills
 /plugin install wiki-tools@datawizard-skills
 /plugin install web-conversion@datawizard-skills
 /plugin install web-motion@datawizard-skills
-/plugin install writing-style@datawizard-skills
 /plugin install knowledge-capture@datawizard-skills
 ```
 
@@ -62,8 +60,6 @@ Nainstaluj jen ty, které potřebuješ.
 Skills se pak buď **automaticky aktivují** podle popisu v dané situaci, nebo je můžeš zavolat jako slash command:
 
 ```
-/start         # zahájí pracovní úsek
-/wrap          # uzavře úsek a zapíše log
 /ship          # commit + push
 ```
 
@@ -90,15 +86,15 @@ Když na repu vyjde nová verze:
 Cursor zatím plugin systém nemá — používá `~/.cursor/skills/` jako složku. Skills sdílíš symlinkem:
 
 ```bash
-# Pro celý plugin (např. talent-coaching)
-ln -s /cesta/k/datawizard-skills/plugins/talent-coaching/skills ~/.cursor/skills/talent-coaching
+# Pro celý plugin (např. content-tools)
+ln -s /cesta/k/datawizard-skills/plugins/content-tools/skills ~/.cursor/skills/content-tools
 ```
 
 Po naklonování repa nastav cestu podle vlastního umístění:
 
 ```bash
 git clone https://github.com/Karyzard/datawizard-skills.git ~/dev/datawizard-skills
-ln -s ~/dev/datawizard-skills/plugins/talent-coaching/skills ~/.cursor/skills/talent-coaching
+ln -s ~/dev/datawizard-skills/plugins/content-tools/skills ~/.cursor/skills/content-tools
 ```
 
 ## Pro vývoj a přispívání
@@ -127,7 +123,7 @@ ln -s ~/dev/datawizard-skills/plugins/talent-coaching/skills ~/.cursor/skills/ta
 
 ### Vzorový plugin
 
-Podívej se na [`plugins/datawizard-core/`](plugins/datawizard-core/) — nejjednodušší příklad se 3 skills a `rules/`.
+Podívej se na [`plugins/datawizard-core/`](plugins/datawizard-core/) — nejjednodušší příklad se skillem a `rules/`.
 
 ### Vzorový komplexní plugin
 

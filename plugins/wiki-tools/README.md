@@ -16,5 +16,5 @@ Markdown wiki tools for the OS Datawizard knowledge base system.
 ## Installation
 
 ```bash
-/plugin install file:///Users/karelsimek/Documents/_app-projects/datawizard-skills/plugins/wiki-tools
+/plugin install wiki-tools@datawizard-skills
 ```

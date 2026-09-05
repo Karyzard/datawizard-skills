@@ -27,6 +27,8 @@ ls docs/html-prototype/
 
 ### Step 1 — Read the app
 
+Cesty níže jsou příklad z FEOS aplikace. Čti je, pokud v projektu existují; jinak najdi ekvivalenty (nav struktura, globální CSS, header komponenta).
+
 1. `src/components/navigation/navigation-items.ts` — nav structure (sections, dotColor, subitems + urls)
 2. `src/index.css` — CSS variables
 3. `src/components/navigation/app-sidebar-header.tsx` — brand name, logo initials
@@ -42,16 +44,16 @@ Create `docs/html-prototype/v{version}/`:
 - Base styles: reset, `.app-shell`, `.app-main`, `.topbar`, `.page-content`, `.card`, `.badge`, `.btn`, `.table`, `.tabs-bar`, `.tab-btn`, `.tab-panel`, `.avatar`, `.detail-header`, `.grid-2`, `.grid-3`, `.section-label`, `.progress-bar`, `.stat-number`
 - Light + dark theme via `[data-theme="dark"]`
 
-**theme.js** — light/dark toggle stored in `localStorage` key `feos-theme`. Auto-inject toggle button into `.topbar-right` on DOMContentLoaded.
+**theme.js** — light/dark toggle stored in `localStorage` key `<projekt>-theme` (např. ve FEOS aplikaci `feos-theme`). Auto-inject toggle button into `.topbar-right` on DOMContentLoaded.
 
 **nav.js** — sidebar via DOM only (createElement/appendChild — never innerHTML with variable data):
-- `alwaysOpen: true` sections → **card** with `border + border-radius`, card header with colored dot + uppercase label, subitem rows with `border-top` separators and Lucide SVG icons. Active = `background: #E63946; color: #fff`.
+- `alwaysOpen: true` sections → **card** with `border + border-radius`, card header with colored dot + uppercase label, subitem rows with `border-top` separators and Lucide SVG icons. Active = primární barva projektu (např. ve FEOS aplikaci `background: #E63946; color: #fff`).
 - `alwaysOpen: false` sections → collapsible row with icon + ChevronDown. Toggle on click.
 - Dashboard → plain single link.
-- Footer: "User Guide" + "Můj profil" — matches `app-sidebar-footer.tsx`.
+- Footer: podle sidebar footer komponenty projektu, pokud existuje (např. ve FEOS aplikaci `app-sidebar-footer.tsx`: "User Guide" + "Můj profil").
 - All icons as inline SVG via `createElementNS` — Lucide paths (Home, UserCheck, Users, User, BarChart3, Calendar, TrendingUp, FileText, Settings, CalendarClock, Stethoscope, ChevronDown, BookOpen). Never emoji.
 - Items without a prototype page: `href="#"`, click blocked, `opacity: 0.35`.
-- `<meta name="feos-nav-active" content="...">` on each page sets the active item.
+- `<meta name="<projekt>-nav-active" content="...">` on each page sets the active item (prefix podle projektu, např. ve FEOS aplikaci `feos-nav-active`).
 
 ### Step 3 — Generate pages
 
@@ -64,7 +66,7 @@ Create `docs/html-prototype/v{version}/`:
 - Detail pages: functioning tab switcher via `switchTab()`
 - Stub pages: placeholder block "Připravujeme..."
 
-`<meta name="feos-nav-active">` value: `{section-key}-{subitem-key}` (e.g. `leads-overview`)
+`<meta name="<projekt>-nav-active">` value: `{section-key}-{subitem-key}` (e.g. `leads-overview`)
 
 ---
 
@@ -74,7 +76,7 @@ Create `docs/html-prototype/v{version}/`:
 
 1. Identify the latest existing version folder in `docs/html-prototype/` (highest version number).
 2. Copy it as the new version: `cp -r docs/html-prototype/v{prev} docs/html-prototype/v{new}`
-3. Read `src/components/navigation/navigation-items.ts` — the current nav structure.
+3. Read the project's nav structure file, pokud existuje (např. ve FEOS aplikaci `src/components/navigation/navigation-items.ts`).
 4. Read `nav.js` from the **old** version — extract what nav structure it was built from.
 5. Diff the two:
    - **New sections** added to nav → need new pages + update nav.js
@@ -87,7 +89,7 @@ Create `docs/html-prototype/v{version}/`:
 
 If nav structure changed:
 - Update `nav.js` NAV_DATA — add/remove/rename sections and items. Keep existing icon assignments; assign sensible Lucide icons for new items.
-- Do NOT touch `theme.css` or `theme.js` unless `src/index.css` changed significantly.
+- Do NOT touch `theme.css` or `theme.js` unless the project's global CSS (např. `src/index.css`) changed significantly.
 
 ### Step 3b — Patch pages (only changed/new)
 

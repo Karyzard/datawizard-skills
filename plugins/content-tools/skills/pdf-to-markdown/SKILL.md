@@ -55,10 +55,10 @@ Po filtraci klasifikuj:
 
 Pro **každý** slide klasifikovaný jako image-only nebo partial-text:
 
-1. Exportuj stránku jako PNG:
+1. Exportuj stránku jako PNG bundlovaným skriptem. Cesta je relativní k SKILL.md (`<SKILL_DIR>` = složka tohoto skillu):
 
 ```bash
-python3 ~/.cursor/skills/pdf-to-markdown/scripts/export_pdf_page.py "CESTA_K_PDF" CISLO_STRANKY /tmp/slide_PAGE.png
+python3 "<SKILL_DIR>/scripts/export_pdf_page.py" "CESTA_K_PDF" CISLO_STRANKY /tmp/slide_PAGE.png
 ```
 
 2. Přečti exportovaný PNG pomocí Read tool (vizuální analýza)

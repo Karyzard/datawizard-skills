@@ -20,13 +20,14 @@ zvládne. Placené nástroje nikdy nespouštěj ve smyčce bez horní meze.
 
 - **Cena:** 5 USD za 1 000 dotazů, každý měsíc 5 USD kredit zdarma (≈ 1 000
   dotazů). Rate limit 50 dotazů/s. Stav a útrata: https://api-dashboard.search.brave.com
-- **Klíč:** macOS Keychain, service `brave-search-api-key`, account `karelsimek`.
-  Registr služeb: `_DATAWIZARD/TOOLS.md`. Klíč nikdy do chatu ani do souborů.
+- **Klíč:** macOS Keychain, service `brave-search-api-key`, account = přihlášený
+  uživatel (`$USER`). Registr služeb: interní registr nástrojů (OneDrive
+  `_DATAWIZARD/TOOLS.md`), pokud k němu máš přístup. Klíč nikdy do chatu ani do souborů.
 - **K čemu:** prospecting (dohledat oficiální web pro seznam firem), hromadné
   ověřování, cokoli, kde se dotazy generují skriptem.
 
 ```bash
-KEY=$(security find-generic-password -a karelsimek -s brave-search-api-key -w)
+KEY=$(security find-generic-password -a "$USER" -s brave-search-api-key -w)
 curl -s -H "Accept: application/json" -H "X-Subscription-Token: $KEY" \
   "https://api.search.brave.com/res/v1/web/search?q=ACME%20s.r.o.&count=5&country=cz&search_lang=cs"
 ```
@@ -96,6 +97,6 @@ ať je útrata dohledatelná. Surová data (JSON, HTML) zůstávají ve scratchp
 
 - Nepoužívej Browserless na stránky, které `WebFetch` přečte. Zkus zdarma
   variantu první, placenou až po selhání.
-- Neposílej klíč ani token do chatu, do repa ani do OneDrive souborů.
+- Neposílej klíč ani token do chatu, do repa ani do sdílených úložišť (cloud, OneDrive apod.).
 - Necrawluj bez `limit`. Výchozí 100 stránek je strop, ne cíl.
 - Nespouštěj Brave dotazy v cyklu, dokud nevíš délku seznamu.

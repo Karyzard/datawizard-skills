@@ -1,6 +1,6 @@
 ---
 name: ui-ux-pro-max
-description: "UI/UX design intelligence for web and mobile. Includes 50+ styles, 161 color palettes, 57 font pairings, 161 product types, 99 UX guidelines, and 25 chart types across 10 stacks (React, Next.js, Vue, Svelte, SwiftUI, React Native, Flutter, Tailwind, shadcn/ui, and HTML/CSS). Actions: plan, build, create, design, implement, review, fix, improve, optimize, enhance, refactor, and check UI/UX code. Projects: website, landing page, dashboard, admin panel, e-commerce, SaaS, portfolio, blog, and mobile app. Elements: button, modal, navbar, sidebar, card, table, form, and chart. Styles: glassmorphism, claymorphism, minimalism, brutalism, neumorphism, bento grid, dark mode, responsive, skeuomorphism, and flat design. Topics: color systems, accessibility, animation, layout, typography, font pairing, spacing, interaction states, shadow, and gradient. Integrations: shadcn/ui MCP for component search and examples."
+description: "UI/UX design intelligence for web and mobile. Use for any UI/UX decision: choosing a visual style, color palette, or font pairing, designing or reviewing pages and components, or setting up a design system. Searchable databases of styles (glassmorphism, minimalism, brutalism, neumorphism, bento grid), color palettes, font pairings, product types, UX guidelines, and chart types across common stacks (React, Next.js, Vue, SwiftUI, Flutter, Tailwind, shadcn/ui). Covers accessibility and typography."
 ---
 
 # UI/UX Pro Max - Design Intelligence
@@ -319,6 +319,7 @@ If Python is not installed, install it based on user's OS:
 ```bash
 brew install python3
 ```
+(Requires Homebrew. Alternatively download the installer from python.org, which works on any platform.)
 
 **Ubuntu/Debian:**
 ```bash

@@ -1,6 +1,6 @@
 ---
 name: generate-images
-description: Generuje obrazky pres Google Gemini API. Zvladne tri vstupy — hotovy brief.md, surove poznamky/diktovani (AI vytvori brief), nebo auto mode (bez schvalovani). Pouzivej kdykoli uzivatel chce generovat obrazky, pripravit image brief, vytvorit vizualy pro projekt, nebo popisuje jake obrazky potrebuje. Triggeruj na "generuj obrazky", "generate images", "obrazky z poznamek", "vygeneruj bez schvaleni", "auto generate", "image brief", "priprav obrazky", "vizualy". Komunikuj cesky.
+description: Generuje obrázky přes Google Gemini API. Zvládne tři vstupy — hotový brief.md, surové poznámky/diktování (AI vytvoří brief), nebo auto mode (bez schvalování). Používej kdykoli uživatel chce generovat obrázky, připravit image brief, vytvořit vizuály pro projekt, nebo popisuje jaké obrázky potřebuje. Triggeruj na "generuj obrázky", "generate images", "obrázky z poznámek", "vygeneruj bez schválení", "auto generate", "image brief", "připrav obrázky", "vizuály". Komunikuj česky.
 allowed-tools: Bash(pip install:*), Bash(pip3 install:*), Bash(python:*), Bash(python3:*), Bash(which:*), Bash(ls:*), Bash(mkdir:*), Read, Write, Edit, Glob, Grep, AskUserQuestion
 ---
 

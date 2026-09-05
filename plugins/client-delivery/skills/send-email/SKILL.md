@@ -75,8 +75,8 @@ type: sent-email
 date: 2026-04-08
 to: Jméno Příjemce <email@example.com>
 subject: Předmět emailu
-from: Karel Šimek <karel@datawizard.cz>
-signature: datawizard
+from: Jméno Odesílatele <jmeno@datawizard.cz>
+signature: default
 status: draft
 attachments:
   - ../priloha1.pdf
@@ -102,7 +102,7 @@ S pozdravem,
 | `to` | ano | Příjemce — `Jméno <email>` nebo jen `email` |
 | `subject` | ano | Předmět zprávy |
 | `from` | ne | Odesílatel (pro kontext, Outlook použije aktivní účet) |
-| `signature` | ne | Profil odesílatele — `datawizard` (výchozí), `tokada`, nebo vlastní — viz níže |
+| `signature` | ne | Profil odesílatele — bez uvedení se použije `default` (tvůj osobní profil), jinak jméno profilu — viz níže |
 | `date` | ne | Datum draftu |
 | `type` | ne | Vždy `sent-email` |
 | `status` | ne | `draft` nebo `sent` |
@@ -110,32 +110,31 @@ S pozdravem,
 
 ### Podpis / profil odesílatele
 
-Podpis se **nepíše do těla mailu** — skript ho vyrenderuje z profilu odesílatele a přidá na konec (do Outlooku jako HTML, do textového výstupu jako plain text). Profil vybírá pole `signature` ve frontmatter (výchozí `datawizard`).
+Podpis se **nepíše do těla mailu** — skript ho vyrenderuje z profilu odesílatele a přidá na konec (do Outlooku jako HTML, do textového výstupu jako plain text). Profil vybírá pole `signature` ve frontmatter; bez něj se použije profil `default`, tj. **tvůj vlastní podpis**.
 
-**Profil = malý JSON** se čtyřmi poli (všechna volitelná kromě `name`):
+**Profil = malý JSON** se čtyřmi poli (všechna volitelná kromě `name`) — viz `signatures/_template.json`:
 
 ```json
 {
-  "name": "Karel Šimek",
-  "tagline": "Vývoj aplikací / webů • AI v produktivitě • Reporting",
-  "email": "Karel.Simek@datawizard.cz",
-  "phone": "+420 720 738 044"
+  "name": "Jméno Příjmení",
+  "tagline": "Krátký popis role / co děláš",
+  "email": "jmeno@datawizard.cz",
+  "phone": "+420 000 000 000"
 }
 ```
 
-Přibalené profily (ukázka — Karel Šimek):
+**První nastavení (jednou per člověk):** zkopíruj `signatures/_template.json` do `~/.claude/email-signatures/default.json` a vyplň svoje údaje. Hotovo — všechny emaily bez explicitního `signature:` pole dostanou tvůj podpis. Konfigurace žije mimo plugin, takže přežije jeho update a nesdílí se.
+
+**Sdílené profily v repu** (`signatures/<jmeno>.json`) — šablony jednotlivých lidí, hodí se když někdo posílá email „za" kolegu nebo pod jinou značkou:
 
 | `signature` | Kdo | Soubor |
 |-------------|-----|--------|
-| `datawizard` (výchozí) | Karel Šimek — DatawizardCZ | `signatures/datawizard.json` |
-| `tokada` | Karel Šimek — Tokada | `signatures/tokada.json` |
+| `karel-simek` | Karel Šimek — DatawizardCZ | `signatures/karel-simek.json` |
+| `karel-simek-tokada` | Karel Šimek — Tokada | `signatures/karel-simek-tokada.json` |
 
-**Jak přidat sebe (jiný člen týmu):** zkopíruj `signatures/_template.json` na `<jméno>.json`, vyplň svoje údaje a ve frontmatter dej `signature: <jméno>`. Uložit ho můžeš dvěma způsoby:
+Chceš do repa přidat svůj sdílený profil? Zkopíruj `_template.json` na `signatures/<jmeno>.json` a commitni.
 
-1. **Osobní override** → `~/.claude/email-signatures/<jméno>.json` — přežije update pluginu, nesdílí se. (Sem patří i osobní úprava `datawizard.json`.)
-2. **Sdílený v repu** → `signatures/<jméno>.json` — commitne se do `datawizard-skills`, dostanou ho všichni.
-
-Override v `~/.claude/email-signatures/` má přednost před přibaleným profilem. Pro pokročilý podpis (logo apod.) můžeš místo JSON vložit `<jméno>.html` s hotovým HTML blokem — použije se doslovně.
+**Pořadí hledání profilu** (první nález vyhrává): `~/.claude/email-signatures/<name>.json` → `~/.claude/email-signatures/<name>.html` → `signatures/<name>.json` ve skillu → `signatures/<name>.html` ve skillu. Pro pokročilý podpis (logo apod.) můžeš místo JSON vložit `<name>.html` s hotovým HTML blokem — použije se doslovně.
 
 ### Co skript dělá s Markdown body
 
@@ -164,7 +163,7 @@ Skript je bundlovaný v tomto skillu. Cesta ke skriptu je relativní k SKILL.md:
 <tento-skill>/scripts/open-in-outlook.py
 ```
 
-Skript potřebuje Python 3 (standardní knihovny, žádné dependencies) a Microsoft Outlook nainstalovaný na macOS.
+Skript potřebuje Python 3 (standardní knihovny, žádné dependencies). **Formát `outlook` funguje jen na macOS s nainstalovaným Microsoft Outlookem** (používá AppleScript). Na jiné platformě nebo bez Outlooku použij `--format text` a výstup zkopíruj do libovolného mail klienta.
 
 ## Po spuštění
 

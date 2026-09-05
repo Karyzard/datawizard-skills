@@ -1,9 +1,0 @@
-{
-  "name": "writing-style",
-  "version": "0.1.0",
-  "description": "Writing in Karel's voice across channels (LinkedIn, e-mail, messages, offers) with a deterministic anti-AI-slop check",
-  "author": {
-    "name": "Karel Simek",
-    "email": "datawizard.bi@gmail.com"
-  }
-}

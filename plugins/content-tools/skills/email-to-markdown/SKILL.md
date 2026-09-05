@@ -16,9 +16,9 @@ Převede `.msg` soubor (Outlook) na čistý Markdown.
 
 ## Závislosti
 
-Knihovna `extract-msg` musí být nainstalovaná:
+Knihovny `extract-msg` a `beautifulsoup4` musí být nainstalované:
 ```bash
-pip3 install extract-msg
+pip3 install extract-msg beautifulsoup4
 ```
 
 Ověř dostupnost:

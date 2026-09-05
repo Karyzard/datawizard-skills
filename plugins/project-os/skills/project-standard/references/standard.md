@@ -264,7 +264,7 @@ Mapování prefix → větev: `datawizard-*` a `template-*` → `datawizard/`, `
 - Agent se otevírá nad `~/dev/` (nebo nad konkrétní větví). Pocit „jednoho celku" vzniká tady, ne slučováním rep.
 - Skill **`/workspace-sync`**: projde `gh repo list DatawizardCZ`, chybějící repa naklonuje do správné větve podle prefixu, existující pullne. Jeden příkaz, všechno aktuální. Každý člen týmu si syncne jen repa, kam má přístup; nic se nerozbije tím, že na CRM nedosáhne.
 - Konvence pro tým do `datawizard-os/05-navody/` (součást GitHub workflow návodu).
-- **Migrace u Karla:** dnešní `~/dev/_project-repos/` a org repa roztroušená v `~/dev/_app-projects/` (datawizard-os, datawizard-skills…) se postupně přesunou do větví výše; ne-org a osobní věci v `_app-projects/` zůstávají mimo zrcadlo. `med-elektronik-hub` a `project-med-hub` jsou oba klientské huby MED Elektronik → `hubs/` (viz otevřený bod ke konsolidaci níže).
+- **První nastavení:** layout `~/dev/` je týmový standard Datawizard. Každý člen týmu si větve zrcadla vytvoří jednou: `mkdir -p ~/dev/projects ~/dev/hubs ~/dev/code ~/dev/datawizard`. Repa pak doplní `/workspace-sync`.
 
 ## 3c. Profil bez gitu (OneDrive projekty)
 

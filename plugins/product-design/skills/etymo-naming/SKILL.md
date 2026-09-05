@@ -1,6 +1,6 @@
 ---
 name: etymo-naming
-description: Generate brand and product name candidates using etymological roots from Greek, Latin, Norse, Celtic, Polynesian, Inuit, and other source languages, plus historical figures and events. Use this skill whenever the user wants to name or rename a product, app, startup, brand, project, service, or company — even if they don't explicitly say "naming skill" or "etymological". Triggers include phrases like "I need a name for…", "help me rename…", "rebrand…", "come up with a name…", "the .com is taken, I need alternatives", or any time the user is brainstorming brand names. The skill produces 30+ candidates organized by source language, including derived neologisms (made-up words built from real roots), and ends with a domain-availability checklist.
+description: Generuje kandidáty na jméno značky nebo produktu z etymologických kořenů (řečtina, latina, severské, keltské, polynéské, inuitské a další jazyky) a z historických postav a událostí. Vytvoří 30+ kandidátů řazených podle zdrojového jazyka, včetně odvozených neologismů (vymyšlená slova z reálných kořenů), a zakončí checklistem dostupnosti domén. Používej kdykoli uživatel chce pojmenovat nebo přejmenovat produkt, appku, startup, značku, projekt, službu nebo firmu, i když výslovně neřekne "naming". Triggeruj i na "potřebuju jméno", "jak to pojmenovat", "rebrand", "doména je zabraná", "I need a name for…", "help me rename…", "come up with a name…", "the .com is taken". Komunikuj česky.
 ---
 
 # Etymo-Naming

@@ -126,6 +126,8 @@ Pro každý koncept vytvoř:
 ```
 ```
 
+Midjourney a DALL-E jsou externí nástroje: uživatel potřebuje vlastní účet nebo API přístup. Prompty fungují v libovolném generátoru obrázků.
+
 **4 konceptuální přístupy:**
 
 | # | Přístup | Popis |

@@ -21,23 +21,36 @@ Orchestrátor pro přidání nového zdroje do LLM wiki.
 
 Před ingestionem urči:
 
-1. **Do které wiki** se má zdroj přidat? Možnosti:
-   - `wiki-os` → `~/Documents/personal-os/wiki-os/` (OS Datawizard, nástroje, projekty)
-   - `personal` → `~/Documents/wiki/personal/` (osobní, cíle, psychologie)
-   - `klient/<nazev>` → `~/Documents/01_Projekty/<klient>/wiki/` (klientský kontext)
-   - `general` → `~/Documents/_tools/05-knowledge/wiki/` (obecné znalosti)
+1. **Do které wiki** se má zdroj přidat? Seznam wik a jejich cest je v uživatelově konfiguraci `~/.claude/wiki-config.md` (alias → cesta → popis). Pokud uživatel řekl alias nebo cestu přímo, použij ji.
+
+   Pokud `~/.claude/wiki-config.md` neexistuje, zeptej se uživatele na cestu k wiki a nabídni založení konfigurace v tomto formátu:
+
+   ```markdown
+   ---
+   title: Wiki Config
+   date: YYYY-MM-DD
+   ---
+
+   # Wiki Config
+
+   Výchozí wiki: <alias>
+
+   | Alias | Cesta | Popis |
+   |---|---|---|
+   | wiki-os | ~/cesta/k/wiki-os/ | OS Datawizard, nástroje, projekty |
+   | klient/<nazev> | ~/cesta/ke/klientovi/wiki/ | klientský kontext |
+   ```
 
 2. **Jaký je zdroj?** Cesta k souboru nebo obsah.
 
-Pokud wiki nebo cesta k wiki neexistuje, nejprve ji zaloož podle `~/Documents/_wiki-schema/AGENTS.md`.
+Pokud wiki na dané cestě ještě neexistuje, nejprve ji založ: vytvoř `<wiki-root>/AGENTS.md` (doménové konvence), `index.md`, `log.md` a složky `wiki/{entities,concepts,sources,decisions,analyses}/` + `raw/`.
 
 ---
 
 ## Krok 1 — Přečti schéma a kontext
 
-1. Přečti `~/Documents/_wiki-schema/AGENTS.md` — master konvence
-2. Přečti `<wiki-root>/AGENTS.md` — doménové instrukce
-3. Přečti `<wiki-root>/index.md` — co již existuje
+1. Přečti `<wiki-root>/AGENTS.md` — konvence a doménové instrukce dané wiki
+2. Přečti `<wiki-root>/index.md` — co již existuje
 
 ---
 
@@ -89,7 +102,7 @@ Pokud uživatel není k dispozici nebo řekne "autonomně", pokračuj bez potvrz
 
 ### 5a. Vytvoř source stránku
 
-Vždy vytvoř stránku v `wiki/sources/source-<kebab-nazev>.md` podle šablony `~/Documents/_wiki-schema/page-templates/source.md`.
+Vždy vytvoř stránku v `wiki/sources/source-<kebab-nazev>.md`. Šablonu hledej v `<wiki-root>/_schema/page-templates/source.md`; pokud neexistuje, použij minimální frontmatter (`type: source`, `title`, `created`, `status`) + sekce Shrnutí a Klíčové poznatky.
 
 ### 5b. Vytvoř nebo aktualizuj entity/concept/decision stránky
 
@@ -142,7 +155,7 @@ Aktualizované stránky: M
 ## Poznámky
 
 - `raw/` soubory nikdy nemodifikuj
-- Šablony jsou v `~/Documents/_wiki-schema/page-templates/`
-- Frontmatter je povinný — viz `~/Documents/_wiki-schema/frontmatter.md`
+- Šablony jsou v `<wiki-root>/_schema/page-templates/`; bez nich použij minimální frontmatter
+- Frontmatter je povinný — minimálně `type`, `title`, `created`, `status`
 - Preferuj aktualizaci existující stránky před vytvořením nové — nejprve zkontroluj index
 - Pokud zdroj odporuje existující stránce, přidej sekci `## Revize` s vysvětlením konfliktu

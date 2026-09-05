@@ -21,10 +21,10 @@ Odpovídá na dotazy přes LLM wiki s citacemi. Index-first přístup.
 ## Krok 1 — Identifikuj wiki a dotaz
 
 Urči:
-1. **Která wiki** je relevantní pro dotaz (nebo prohledej více)
+1. **Která wiki** je relevantní pro dotaz (nebo prohledej více) — aliasy a cesty jsou v `~/.claude/wiki-config.md` (formát viz skill `wiki-ingest`)
 2. **Co se ptá** — entity, téma, srovnání, nebo otevřená otázka
 
-Pokud není wiki specifikována, začni s `wiki-os` a rozšiř dle potřeby.
+Pokud není wiki specifikována, začni výchozí wiki z konfigurace a rozšiř dle potřeby. Pokud konfigurace neexistuje, zeptej se uživatele na cestu k wiki.
 
 ---
 

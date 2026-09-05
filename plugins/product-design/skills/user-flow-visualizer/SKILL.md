@@ -189,7 +189,7 @@ lsof -ti:8765 | xargs kill -9 2>/dev/null || true
 # Spusť server
 cd "{výstupní-složka}/prototypes" && python3 -m http.server 8765 &>/tmp/flow-server.log &
 
-# Otevři v browseru
+# Otevři v browseru (macOS; na Linuxu xdg-open, na Windows start)
 sleep 1 && open "http://localhost:8765/index.html"
 ```
 

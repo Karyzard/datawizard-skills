@@ -7,7 +7,7 @@ Generate a clickable HTML prototype for a feature spec folder.
 
 Usage: /prototype-feature {path-to-feature-folder}
 
-The path is relative to the repo root (e.g. `../2026-feos-apps/11-admin-app-client-data/Client onboarding`).
+The path is relative to the repo root (např. ve FEOS repu: `../2026-feos-apps/11-admin-app-client-data/Client onboarding`).
 
 ## Step 1 — Read the feature spec
 
@@ -18,7 +18,7 @@ Read all markdown files in the given folder (skip subfolders like `archive/`, `c
 
 ## Step 2 — Read the app skeleton
 
-Read these to get current design system + nav:
+Read these to get current design system + nav. Cesty jsou příklad z FEOS aplikace; čti je, pokud v projektu existují, jinak najdi ekvivalenty:
 - `src/components/navigation/navigation-items.ts` — current nav structure
 - `src/index.css` — CSS variables (colors, radius)
 - `src/components/navigation/app-sidebar-header.tsx` — brand name
@@ -46,10 +46,10 @@ Create `{feature-folder}/prototype/` with:
 - `theme.css` — full design tokens + base styles (same as generate-prototype output)
 - `theme.js` — light/dark toggle
 - `nav.js` — full sidebar navigation. Must match the real app structure exactly:
-  - `alwaysOpen: true` sections → **card** with `border + border-radius`, card header with colored dot + uppercase label, subitem rows separated by `border-top`, Lucide SVG icons per row. Active = `background: #E63946`.
+  - `alwaysOpen: true` sections → **card** with `border + border-radius`, card header with colored dot + uppercase label, subitem rows separated by `border-top`, Lucide SVG icons per row. Active = primární barva projektu (např. ve FEOS aplikaci `background: #E63946`).
   - `alwaysOpen: false` sections → collapsible row with icon + ChevronDown.
   - Dashboard → plain single link.
-  - Footer at bottom with "User Guide" + "Můj profil" (matches `app-sidebar-footer.tsx`).
+  - Footer at bottom podle sidebar footer komponenty projektu, pokud existuje (např. ve FEOS aplikaci `app-sidebar-footer.tsx`: "User Guide" + "Můj profil").
   - All icons as inline SVG via `createElementNS` — Lucide paths, never emoji.
   - Items without a prototype page: dimmed (`opacity: 0.35`), click blocked.
   - Add the feature's nav section to NAV_DATA if it doesn't exist in the real app yet.
@@ -60,8 +60,8 @@ Create `{feature-folder}/prototype/` with:
 
 Each screen file:
 - Uses `theme.css`, `theme.js`, `nav.js` from same folder (`./`)
-- Has `<meta name="feos-nav-active">` matching where this feature lives in the nav (or closest parent section)
-- Has `<meta name="feos-nav-depth" content="0">` (all files are in prototype/ root)
+- Has `<meta name="<projekt>-nav-active">` matching where this feature lives in the nav (or closest parent section); prefix podle nav.js (např. ve FEOS aplikaci `feos-nav-active`)
+- Has `<meta name="<projekt>-nav-depth" content="0">` (all files are in prototype/ root)
 - Topbar with breadcrumb showing path to this screen
 - Realistic fake Czech data matching the spec (names, dates, statuses from the domain)
 - For list/overview screens: clickable rows → detail screen

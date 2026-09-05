@@ -84,4 +84,4 @@ Povolené hodnoty `status` milestonu: `planned` | `in-progress` | `done` | `at-r
 
 ## Detailní schéma polí
 
-Viz `~/.cursor/skills/backlog-dashboard/schema.md` (v Cursoru).
+Viz `schema.md` ve složce skillu `backlog-dashboard` (vedle SKILL.md, o úroveň výš nad touto šablonou).

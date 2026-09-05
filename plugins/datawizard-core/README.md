@@ -5,15 +5,13 @@ date: 2026-04-28
 
 # datawizard-core
 
-Session management workflow for the OS Datawizard markdown vault system.
+Core workflow and global rules for the OS Datawizard markdown vault system.
 
 ## Skills
 
-- **start** — Begin a new work session, write pointer file with window name + start time
-- **wrap** — Close session, append summary log to today's session file, prepare for `/clear`
 - **ship** — Commit all changes and push to GitHub
 
-Project repos (`project-*`) are covered by the `project-os` plugin (2026-09-04); the former `workspace-docs-setup` skill was removed.
+> `start` a `wrap` (osobní session workflow) se přesunuly do osobního repa `karel-skills` (2026-09-05). Project repos (`project-*`) are covered by the `project-os` plugin (2026-09-04); the former `workspace-docs-setup` skill was removed.
 
 ## Rules
 
@@ -25,6 +23,6 @@ Global rules referenced by `~/.claude/CLAUDE.md`:
 
 ## Installation
 
-```bash
-/plugin install file:///Users/karelsimek/Documents/_app-projects/datawizard-skills/plugins/datawizard-core
+```
+/plugin install datawizard-core@datawizard-skills
 ```
