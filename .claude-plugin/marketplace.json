@@ -116,6 +116,16 @@
       },
       "source": "./plugins/writing-style",
       "category": "productivity"
+    },
+    {
+      "name": "knowledge-capture",
+      "description": "Knowledge capturing from external sources — YouTube playlist/channel transcripts to markdown + Excel, and a web research guide (WebFetch, Playwright, Brave Search API, Browserless) with cost rules.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Karel Simek"
+      },
+      "source": "./plugins/knowledge-capture",
+      "category": "productivity"
     }
   ]
 }
